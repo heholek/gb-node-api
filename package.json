@@ -1,0 +1,31 @@
+{
+  "name": "gb-local-node-server",
+  "version": "1.0.0",
+  "description": "Local node server on each GB",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"node ./dist/server.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GarbageBytes/gb-local-node-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GarbageBytes/gb-local-node-server/issues"
+  },
+  "homepage": "https://github.com/GarbageBytes/gb-local-node-server#readme",
+  "dependencies": {
+    "@types/compression": "^1.0.1",
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.21",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^5.0.0-alpha.7",
+    "tsc-watch": "^4.0.0",
+    "typescript": "^3.7.4"
+  }
+}
