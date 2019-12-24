@@ -5,6 +5,11 @@ import errorHandlers from "./middleware/errorHandlers";
 import routes from "./services";
 import { applyMiddleware, applyRoutes } from "./utils";
 
+import { IUser } from "./models/user";
+import auth from "./services/auth/auth";
+
+const db = require("./db/baseRepository");
+
 // Error Handling
 process.on("uncaughtException", e => {
   console.log(e);
@@ -16,6 +21,35 @@ process.on("unhandledRejection", e => {
 });
 
 const router = express();
+
+// TODO MOVE TO MIDDLEWARE FUNCTION
+
+router.use(auth.initialize());
+
+router.all(process.env.API_BASE + "*", (req, res, next) => {
+  if (req.path.includes(process.env.API_BASE + "login")) {
+    return next();
+  }
+
+  return auth.authenticate((err: Error, user: IUser, info: any) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      if (info.name === "TokenExpiredError") {
+        return res
+          .status(401)
+          .json({
+            message: "Your token has expired. Please generate a new one"
+          });
+      } else {
+        return res.status(401).json({ message: info.message });
+      }
+    }
+    router.set("user", user);
+    return next();
+  })(req, res, next);
+});
 
 // Apply all middleware to function
 applyMiddleware(middleware, router);

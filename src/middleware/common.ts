@@ -6,6 +6,8 @@ import compression from "compression";
 import cors from "cors";
 import { Router } from "express";
 
+const expressValidator = require("express-validator");
+
 /**
  * Handle cors
  * @param router
@@ -28,4 +30,8 @@ export const handleBodyRequestParsing = (router: Router) => {
  */
 export const handleCompression = (router: Router) => {
   router.use(compression());
+};
+
+export const expressValidate = (router: Router) => {
+  router.use(expressValidator());
 };
