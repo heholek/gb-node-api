@@ -37,7 +37,9 @@
     "moment": "^2.24.0",
     "mongoose": "^5.8.3",
     "passport": "^0.4.1",
-    "passport-jwt": "^2.2.1"
+    "passport-jwt": "^2.2.1",
+    "roslib": "^1.0.1",
+    "rxjs": "^6.5.3"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

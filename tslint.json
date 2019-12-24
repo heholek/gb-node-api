@@ -6,7 +6,8 @@
     "max-classes-per-file": false,
     "interface-name": false,
     "object-literal-sort-keys": false,
-    "no-var-requires": false
+    "no-var-requires": false,
+    "variable-name": false
   },
   "rulesDirectory": [],
   "extends": ["tslint:latest", "tslint-config-prettier"]
