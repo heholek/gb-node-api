@@ -12,8 +12,8 @@ export class GbDataStream {
   public connected: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
-  private ros: any;
-  private rosUrl: string = "ws://master:9090"; // ROS URl to be used
+  private readonly ros: any;
+  private readonly rosUrl: string = "ws://master:9090"; // ROS URl to be used
 
   /**
    * List of subscriber information that is later initialized

@@ -50,6 +50,7 @@ class Auth {
 
       const errors = req.validationErrors();
       if (errors) {
+        console.error(errors);
         throw errors;
       }
 
@@ -97,7 +98,6 @@ class Auth {
     };
 
     return new Strategy(params, (req: any, payload: any, done: any) => {
-      console.log(req);
       User.findOne({ username: payload.username }, (err, user) => {
         /* istanbul ignore next: passport response */
         if (err) {

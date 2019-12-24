@@ -32,11 +32,10 @@ if (process.env.DB_AUTH === "true") {
   options.pass = process.env.DB_PASS || "";
 }
 
-console.log(dbName);
-
 // Connect to mongo
 mongoose
-  .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`)
+  // .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`)
+  .connect("mongodb://127.0.0.1:27017/?")
   .catch((err: Error) => {
     if (err.message.indexOf("ECONNREFUSED") !== -1) {
       console.error(

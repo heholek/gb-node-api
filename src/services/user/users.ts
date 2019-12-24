@@ -46,7 +46,6 @@ class Users {
   public create = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req);
-
       const Data = new User(req.body);
       Data.save()
         .then(value => {
@@ -66,7 +65,6 @@ class Users {
           }
         });
     } catch (err) {
-      console.log(err);
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
   };

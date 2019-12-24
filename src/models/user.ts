@@ -37,7 +37,7 @@ userSchema.pre("save", function(next) {
   const originalPassword = this.get("password");
   bcrypt.hash(originalPassword, 10, (err, hash) => {
     this.set("password", hash);
-    console.log("done");
+    // console.log("done");
     next();
   });
 });

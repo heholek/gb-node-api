@@ -7,6 +7,7 @@ import { applyMiddleware, applyRoutes } from "./utils";
 
 import { IUser } from "./models/user";
 import auth from "./services/auth/auth";
+const db = require("./db/baseRepository");
 
 // Error Handling
 process.on("uncaughtException", e => {
@@ -40,11 +41,9 @@ router.all("*", (req, res, next) => {
     if (!user) {
       // Checks for expired token
       if (info.name === "TokenExpiredError") {
-        return res
-          .status(401)
-          .json({
-            message: "Your token has expired. Please generate a new one"
-          });
+        return res.status(401).json({
+          message: "Your token has expired. Please generate a new one"
+        });
       } else {
         return res.status(401).json({ message: info.message });
       }

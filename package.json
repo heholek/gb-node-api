@@ -39,7 +39,9 @@
     "passport": "^0.4.1",
     "passport-jwt": "^2.2.1",
     "roslib": "^1.0.1",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.5.3",
+    "socket.io": "^2.3.0",
+    "socketio-jwt": "github:auth0-community/auth0-socketio-jwt"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
