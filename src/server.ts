@@ -7,9 +7,6 @@ import { applyMiddleware, applyRoutes } from "./utils";
 
 import { IUser } from "./models/user";
 import auth from "./services/auth/auth";
-import passport = require("passport");
-
-const db = require("./db/baseRepository");
 
 // Error Handling
 process.on("uncaughtException", e => {

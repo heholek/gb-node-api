@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 (mongoose as any).Promise = require("bluebird");
 let dbName;
 
-//Based on node environment, choose collection name
+// Based on node environment, choose collection name
 switch (process.env.NODE_ENV) {
   case "test":
     dbName = "test";
