@@ -3,6 +3,11 @@ import { Request, Response } from "express-validator";
 import { model as User } from "../../models/user";
 
 class Users {
+  /**
+   * Get all the users in an array
+   * @param req
+   * @param res
+   */
   public getAll = async (req: Request, res: Response) => {
     try {
       const users = await User.find({}).exec();
@@ -13,6 +18,11 @@ class Users {
     }
   };
 
+  /**
+   * Get a single user based on ID
+   * @param req contains id of the user
+   * @param res
+   */
   public getOne = async (req: Request, res: Response) => {
     try {
       const user = await User.findById(req.params.id).exec();
@@ -27,23 +37,45 @@ class Users {
     }
   };
 
+  /**
+   * Create a new user
+   * @param req contains "username" and "password"
+   * @param res
+   * @returns User ID
+   */
   public create = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req);
 
       const Data = new User(req.body);
-      console.log("Request made");
-      await Data.save().catch(err => console.error(err));
-
-      res
-        .status(201)
-        .json({ message: "User saved successfully!", id: Data._id });
+      Data.save()
+        .then(value => {
+          res
+            .status(201)
+            .json({ message: "User saved successfully!", id: Data._id });
+        })
+        .catch((err: any) => {
+          if (err.code === 11000) {
+            res
+              .status(201)
+              .json({ message: `Error: Username Taken`, errors: err });
+          } else {
+            res
+              .status(201)
+              .json({ message: `Error: ${err.errmsg}`, errors: err });
+          }
+        });
     } catch (err) {
       console.log(err);
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
   };
 
+  /**
+   * Updates user
+   * @param req contains "username" and "password"
+   * @param res
+   */
   public update = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req, true);
@@ -56,6 +88,11 @@ class Users {
     }
   };
 
+  /**
+   * Deletes user
+   * @param req contains "id" to delete
+   * @param res
+   */
   public delete = async (req: Request, res: Response) => {
     try {
       await User.findByIdAndRemove(req.params.id);
@@ -65,6 +102,11 @@ class Users {
     }
   };
 
+  /**
+   * Validates request to ensure that "username" and "password" fields aren't empty
+   * @param req
+   * @param update
+   */
   private validateRequest = (req: Request, update = false) => {
     if (!update) {
       req.checkBody("username", "The username cannot be empty").notEmpty();

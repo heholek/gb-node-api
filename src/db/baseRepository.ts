@@ -1,7 +1,11 @@
+/**
+ * Handles connection to mongo database
+ */
 const mongoose = require("mongoose");
 (mongoose as any).Promise = require("bluebird");
 let dbName;
 
+//Based on node environment, choose collection name
 switch (process.env.NODE_ENV) {
   case "test":
     dbName = "test";
@@ -22,6 +26,7 @@ const options = {
   pass: ""
 };
 
+// Check for auth needed
 if (process.env.DB_AUTH === "true") {
   options.user = process.env.DB_USER || "";
   options.pass = process.env.DB_PASS || "";
@@ -29,6 +34,7 @@ if (process.env.DB_AUTH === "true") {
 
 console.log(dbName);
 
+// Connect to mongo
 mongoose
   .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`)
   .catch((err: Error) => {

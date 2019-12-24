@@ -7,6 +7,7 @@ import { applyMiddleware, applyRoutes } from "./utils";
 
 import { IUser } from "./models/user";
 import auth from "./services/auth/auth";
+import passport = require("passport");
 
 const db = require("./db/baseRepository");
 
@@ -23,11 +24,15 @@ process.on("unhandledRejection", e => {
 const router = express();
 
 // TODO MOVE TO MIDDLEWARE FUNCTION
-
+// Initializes auth
 router.use(auth.initialize());
+router.use(auth.session());
 
-router.all(process.env.API_BASE + "*", (req, res, next) => {
-  if (req.path.includes(process.env.API_BASE + "login")) {
+/**
+ * Checks for auth token on all routes except login and register
+ */
+router.all("*", (req, res, next) => {
+  if (req.path.includes("login") || req.path.includes("register")) {
     return next();
   }
 
@@ -36,6 +41,7 @@ router.all(process.env.API_BASE + "*", (req, res, next) => {
       return next(err);
     }
     if (!user) {
+      // Checks for expired token
       if (info.name === "TokenExpiredError") {
         return res
           .status(401)

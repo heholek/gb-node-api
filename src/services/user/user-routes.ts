@@ -1,11 +1,11 @@
-import User from "./users";
-
-const root = "/auth";
+const root = "/user";
 export default [
   {
     root,
-    path: "/register",
-    method: "post",
-    handler: User.create
+    path: "/test",
+    method: "get",
+    handler: async (req: any, res: any) => {
+      res.send("Test");
+    }
   }
 ];

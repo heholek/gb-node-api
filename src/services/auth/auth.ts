@@ -1,11 +1,15 @@
-import * as jwt from "jwt-simple";
-import moment from "moment";
+const jwt = require("jwt-simple");
 import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { IUser, model as User } from "../../models/user";
-import UserController from "../user/users";
+
+const secret = process.env.JWT_SECRET || "afeaf@213feafeaf";
 
 class Auth {
+  /**
+   * Check for username and password
+   * @param req
+   */
   private static checkUsernamePassword(req: any): any {
     req.checkBody("username", "Invalid username").notEmpty();
     req.checkBody("password", "Invalid password").notEmpty();
@@ -23,6 +27,10 @@ class Auth {
     return passport.initialize();
   };
 
+  public session = () => {
+    return passport.session();
+  };
+
   public authenticate = (callback: any) =>
     passport.authenticate(
       "jwt",
@@ -37,21 +45,20 @@ class Auth {
    */
   public login = async (req: any, res: any) => {
     try {
-      // Check for errors
-      const errors = Auth.checkUsernamePassword(req);
+      req.checkBody("username", "Invalid username").notEmpty();
+      req.checkBody("password", "Invalid password").notEmpty();
+
+      const errors = req.validationErrors();
       if (errors) {
         throw errors;
       }
 
-      // Find user
       const user = await User.findOne({ username: req.body.username }).exec();
 
-      // If no user is found, throw error
       if (user === null) {
         throw new Error("User not found");
       }
 
-      // Compare password of users, if password doesn't match, throw error
       const success = await user.comparePassword(req.body.password);
       if (!success) {
         throw new Error("");
@@ -59,6 +66,7 @@ class Auth {
 
       res.status(200).json(this.genToken(user));
     } catch (err) {
+      console.error(err);
       res.status(401).json({ message: "Invalid credentials", errors: err });
     }
   };
@@ -68,33 +76,28 @@ class Auth {
    * @param user User object
    */
   private genToken = (user: IUser): object => {
-    const expires = moment()
-      .utc()
-      .add({ days: 7 })
-      .unix();
     const token = jwt.encode(
       {
-        exp: expires,
         username: user.username
       },
-      process.env.JWT_SECRET || "afeaf@213feafeaf"
+      secret
     );
 
     return {
       token: "JWT " + token,
-      expires: moment.unix(expires).format(),
       user: user._id
     };
   };
 
   private getStrategy = (): Strategy => {
     const params = {
-      secretOrKey: process.env.JWT_SECRET || "afeaf@213feafeaf",
+      secretOrKey: secret,
       jwtFromRequest: ExtractJwt.fromAuthHeader(),
       passReqToCallback: true
     };
 
     return new Strategy(params, (req: any, payload: any, done: any) => {
+      console.log(req);
       User.findOne({ username: payload.username }, (err, user) => {
         /* istanbul ignore next: passport response */
         if (err) {

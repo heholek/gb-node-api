@@ -2,6 +2,16 @@
 
 Local node server on each GB. Typescript based NodeJS Server.
 
+## Documentation
+
+### Authentication
+
+- Auth is provided through the /auth routes
+- Register at /auth/register with a "username" and "password" key. Your user ID will be returned if successful
+- Login at /auth/login with a "username" and "password" key. Your user ID and a token will be returned
+- To access protected routes, put the returned token inside of the header as the `Authorization` key
+- All routes but login and register are protected
+
 ## Get Started Developing
 
 Ensure you have node installed (I prefer nvm to manage versions), typescript, and typescript-watch `npm i -g tsc-watch typescript`

@@ -1,6 +1,9 @@
 import * as bcrypt from "bcryptjs";
 import mongoose, { Document, Schema } from "mongoose";
 
+/**
+ * Creates interface for the user
+ */
 export interface IUser extends Document {
   name: string;
   username: string;
@@ -8,6 +11,9 @@ export interface IUser extends Document {
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
+/**
+ * User Schema for use in Mongodb
+ */
 export const userSchema: Schema = new Schema(
   {
     name: String,
@@ -24,6 +30,9 @@ export const userSchema: Schema = new Schema(
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
+/**
+ * Before saving user, hashes the password
+ */
 userSchema.pre("save", function(next) {
   const originalPassword = this.get("password");
   bcrypt.hash(originalPassword, 10, (err, hash) => {
@@ -33,6 +42,9 @@ userSchema.pre("save", function(next) {
   });
 });
 
+/**
+ * Before updating the user hashes user
+ */
 userSchema.pre("update", function(next) {
   // @ts-ignore
   bcrypt.hash(this.password, 10, (err, hash) => {
@@ -42,6 +54,10 @@ userSchema.pre("update", function(next) {
   });
 });
 
+/**
+ * Compares passwords for logging in
+ * @param candidatePassword
+ */
 userSchema.methods.comparePassword = function(
   candidatePassword: string
 ): Promise<boolean> {

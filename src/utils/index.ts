@@ -2,7 +2,9 @@
  * Main util functions
  */
 import { NextFunction, Request, Response, Router } from "express";
+import passport from "passport";
 
+const auth = passport.authenticate("jwt");
 type Wrapper = (router: Router) => void;
 
 /**
