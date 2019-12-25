@@ -12,8 +12,8 @@ export class GbDataStream {
   public connected: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
-  private readonly ros: any;
-  private readonly rosUrl: string = "ws://master:9090"; // ROS URl to be used
+  private ros: any;
+  private rosUrl: string = "ws://master:9090"; // ROS URl to be used
 
   /**
    * List of subscriber information that is later initialized
@@ -130,7 +130,6 @@ export class RosSubscriber {
       name: this.name,
       messageType: this.messageType
     });
-    console.log("t");
 
     this.topic.subscribe((message: any) => {
       // Check that you aren't subscribing to last published value, prevent echo
