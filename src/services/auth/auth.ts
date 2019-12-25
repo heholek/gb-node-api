@@ -1,9 +1,10 @@
 const jwt = require("jwt-simple");
+import config from "config";
 import passport from "passport";
-import { ExtractJwt, Strategy } from "passport-jwt";
+import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import { IUser, model as User } from "../../models/user";
 
-const secret = process.env.JWT_SECRET || "afeaf@213feafeaf";
+const secret = config.get("secret");
 
 class Auth {
   /**
@@ -97,22 +98,25 @@ class Auth {
       passReqToCallback: true
     };
 
-    return new Strategy(params, (req: any, payload: any, done: any) => {
-      User.findOne({ username: payload.username }, (err, user) => {
-        /* istanbul ignore next: passport response */
-        if (err) {
-          return done(err);
-        }
-        /* istanbul ignore next: passport response */
-        if (user === null) {
-          return done(null, false, {
-            message: "The user in the token was not found"
-          });
-        }
+    return new Strategy(
+      params as StrategyOptions,
+      (req: any, payload: any, done: any) => {
+        User.findOne({ username: payload.username }, (err, user) => {
+          /* istanbul ignore next: passport response */
+          if (err) {
+            return done(err);
+          }
+          /* istanbul ignore next: passport response */
+          if (user === null) {
+            return done(null, false, {
+              message: "The user in the token was not found"
+            });
+          }
 
-        return done(null, { _id: user._id, username: user.username });
-      });
-    });
+          return done(null, { _id: user._id, username: user.username });
+        });
+      }
+    );
   };
 }
 

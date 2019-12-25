@@ -1,12 +1,13 @@
+import config from "config";
 import express from "express";
 import http from "http";
+
 import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
-import routes from "./services";
-import { applyMiddleware, applyRoutes } from "./utils";
-
 import { IUser } from "./models/user";
+import routes from "./services";
 import auth from "./services/auth/auth";
+import { applyMiddleware, applyRoutes } from "./utils";
 const db = require("./db/baseRepository");
 
 // Error Handling
@@ -62,12 +63,13 @@ applyRoutes(routes, router);
 // Apply error handlers
 applyMiddleware(errorHandlers, router);
 
-const { PORT = 3000 } = process.env;
+// tslint:disable-next-line:no-bitwise
+const port = Number(config.get("port")) | 3000;
 const server = http.createServer(router);
 
 // Listen on port
-server.listen(PORT, () =>
-  console.log(`Server is running http://localhost:${PORT}...`)
+server.listen(port, () =>
+  console.log(`Server is running http://localhost:${port}...`)
 );
 
 module.exports = server;

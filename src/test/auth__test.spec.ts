@@ -1,9 +1,6 @@
 import { login, request } from "./common.spec";
 
 import { cleanCollection } from "../models/user";
-
-process.env.API_BASE = "";
-
 describe("# Auth", () => {
   const loginEndpoint = "/auth/login";
 

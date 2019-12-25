@@ -2,6 +2,7 @@
  * Source error handlers
  */
 
+import config from "config";
 import { NextFunction, Response } from "express";
 import { HTTP404Error, HTTPClientError } from "../utils/httpErrors";
 
@@ -31,8 +32,7 @@ export const clientError = (err: Error, res: Response, next: NextFunction) => {
  * @param next
  */
 export const serverError = (err: Error, res: Response, next: NextFunction) => {
-  console.error(err);
-  if (process.env.NODE_ENV === "production") {
+  if (config.get("production")) {
     res.status(500).send("Internal Server Error");
   } else {
     res.status(500).send(err.stack);

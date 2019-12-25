@@ -1,12 +1,13 @@
 /**
  * Handles connection to mongo database
  */
+import config from "config";
 const mongoose = require("mongoose");
 (mongoose as any).Promise = require("bluebird");
 let dbName;
 
 // Based on node environment, choose collection name
-switch (process.env.NODE_ENV) {
+switch (config.get("production")) {
   case "test":
     dbName = "test";
     break;
@@ -17,8 +18,8 @@ switch (process.env.NODE_ENV) {
     dbName = "dev";
 }
 
-const dbAddress = process.env.DB_HOST || "127.0.0.1";
-const dbPort = process.env.DB_PORT || 27017;
+const dbAddress = config.get("db.address");
+const dbPort = config.get("db.port");
 
 const options = {
   useMongoClient: true,
@@ -27,9 +28,9 @@ const options = {
 };
 
 // Check for auth needed
-if (process.env.DB_AUTH === "true") {
-  options.user = process.env.DB_USER || "";
-  options.pass = process.env.DB_PASS || "";
+if (config.get("db.auth")) {
+  options.user = config.get("db.username");
+  options.pass = config.get("db.password");
 }
 
 // Connect to mongo

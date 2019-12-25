@@ -1,6 +1,3 @@
-process.env.NODE_ENV = "test";
-process.env.API_BASE = "";
-
 import chai from "chai";
 import "mocha";
 import supertest from "supertest";
