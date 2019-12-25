@@ -5,7 +5,7 @@ import { cleanCollection } from "../models/user";
 process.env.API_BASE = "";
 
 describe("# Auth", () => {
-  const endpoint = "/auth/login";
+  const loginEndpoint = "/auth/login";
 
   it("should retrieve the token", () => {
     return cleanCollection().then((res: any) => {
@@ -19,21 +19,28 @@ describe("# Auth", () => {
 
   it("should not login with the right user but wrong password", () => {
     return request
-      .post(endpoint)
+      .post(loginEndpoint)
       .send({ username: "testuser", password: "anythingGoesHere" })
       .expect(401);
   });
 
   it("should return invalid credentials error", () => {
     return request
-      .post(endpoint)
+      .post(loginEndpoint)
       .send({ username: "testuser", password: "" })
       .expect(401)
       .then((res: any) => {
         return request
-          .post(endpoint)
+          .post(loginEndpoint)
           .send({ username: "anotherusername", password: "mypass" })
           .expect(401);
       });
+  });
+
+  it("should create user", () => {
+    return request
+      .post("/auth/register")
+      .send({ username: Date.now().toString(), password: "test" })
+      .expect(201);
   });
 });
