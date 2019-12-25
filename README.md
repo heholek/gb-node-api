@@ -1,5 +1,8 @@
 # gb-local-node-server
 
+[![Build Status](https://travis-ci.org/GarbageBytes/gb-local-node-server.svg?branch=master)](https://travis-ci.org/GarbageBytes/gb-local-node-server)
+[![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-local-node-server/badge.svg?branch=development)](https://coveralls.io/github/GarbageBytes/gb-local-node-server?branch=development)
+
 Local node server on each GB. Typescript based NodeJS Server.
 
 ## Documentation
