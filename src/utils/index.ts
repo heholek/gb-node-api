@@ -39,7 +39,7 @@ interface Route {
  * @param routes - Array of routes applied
  * @param router - Router object
  */
-export const applyRoutes = (routes: Route[], router: Router) => {
+export const applyRoutes = (routes: any[], router: Router) => {
   for (const route of routes) {
     const { method, path, handler, root } = route;
     (router as any)[method](root + path, handler);

@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Request, Response } from "express-validator";
+import { Request, Response } from "express";
 import { model as User } from "../../models/user";
 
 class Users {
@@ -105,7 +105,7 @@ class Users {
    * @param req
    * @param update
    */
-  private validateRequest = (req: Request, update = false) => {
+  private validateRequest = (req: any, update = false) => {
     if (!update) {
       req.checkBody("username", "The username cannot be empty").notEmpty();
       req.checkBody("password", "The password cannot be empty").notEmpty();

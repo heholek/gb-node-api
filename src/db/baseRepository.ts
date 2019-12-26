@@ -4,18 +4,11 @@
 import config from "config";
 const mongoose = require("mongoose");
 (mongoose as any).Promise = require("bluebird");
-let dbName;
+let dbName = "dev";
 
 // Based on node environment, choose collection name
-switch (config.get("production")) {
-  case "test":
-    dbName = "test";
-    break;
-  case "production":
-    dbName = "prod";
-    break;
-  default:
-    dbName = "dev";
+if (config.get("production")) {
+  dbName = "production";
 }
 
 const dbAddress = config.get("db.address");
@@ -26,12 +19,6 @@ const options = {
   user: "",
   pass: ""
 };
-
-// Check for auth needed
-if (config.get("db.auth")) {
-  options.user = config.get("db.username");
-  options.pass = config.get("db.password");
-}
 
 // Connect to mongo
 mongoose

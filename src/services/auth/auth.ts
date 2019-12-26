@@ -66,7 +66,7 @@ class Auth {
         throw new Error("");
       }
 
-      res.status(200).json(this.genToken(user));
+      res.status(200).json(this.genToken(user), user.id);
     } catch (err) {
       console.error(err);
       res.status(401).json({ message: "Invalid credentials", errors: err });
