@@ -40,14 +40,7 @@ router.all("*", (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      // Checks for expired token
-      if (info.name === "TokenExpiredError") {
-        return res.status(401).json({
-          message: "Your token has expired. Please generate a new one"
-        });
-      } else {
-        return res.status(401).json({ message: info.message });
-      }
+      return res.status(401).json({ message: info.message });
     }
     router.set("user", user);
     return next();
