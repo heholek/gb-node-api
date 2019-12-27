@@ -49,7 +49,6 @@ class Users {
       const Data = new User(req.body);
       Data.save()
         .then(value => {
-          console.log(value);
           res
             .status(201)
             .json({ message: "User saved successfully!", id: value._id });
@@ -78,8 +77,6 @@ class Users {
   public update = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req, true);
-      console.log(req.params.id);
-
       await User.findByIdAndUpdate(req.params.id, req.body)
         .catch(err => {
           res
@@ -90,7 +87,6 @@ class Users {
           res.status(200).json({ message: "User updated successfully!" });
         });
     } catch (err) {
-      console.log(err);
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
   };
