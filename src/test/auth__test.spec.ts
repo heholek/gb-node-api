@@ -69,7 +69,7 @@ describe("# Auth", () => {
     return request
       .get(`/user/123213898539258`)
       .set("Authorization", testHelper.authToken1)
-      .expect(400);
+      .expect(404);
   });
 
   it("should error out if a user doesnt exist for id", () => {
