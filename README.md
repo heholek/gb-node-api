@@ -3,7 +3,7 @@
 **Master**
 
 [![Build Status](https://travis-ci.org/GarbageBytes/gb-local-node-server.svg?branch=master)](https://travis-ci.org/GarbageBytes/gb-local-node-server)
-[![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-local-node-server/badge.svg?branch=master)](https://coveralls.io/github/GarbageBytes/gb-local-node-server?branch=development)
+[![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-local-node-server/badge.svg?branch=master)](https://coveralls.io/github/GarbageBytes/gb-local-node-server?branch=master)
 
 **Development**
 
@@ -13,6 +13,8 @@
 Local node server on each GB. Typescript based NodeJS Server.
 
 ## Documentation
+
+All methods are documented using jsdoc tags. Tests are written in the test folder using Mocha and NYC for coverage checking.
 
 ### Authentication
 
@@ -38,7 +40,7 @@ Install and run your mongod client.
 
 I've implemented some checkers for code quality
 
-- PreCommit - Prettier using `pretty-quick`
-- PrePush - TsLint
+- PreCommit - Prettier using `pretty-quick` and `tslint` auto fix and check
+- PrePush - `npm run test` to test all code before pushing
 
 Make sure you have clean code before pushing
