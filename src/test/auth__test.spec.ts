@@ -47,11 +47,22 @@ describe("# Auth", () => {
       .expect(201);
   });
 
+  it("should not create user without password", () => {
+    return request
+      .post("/auth/register")
+      .send({ username: "test " + Date.now().toString() })
+      .expect(400);
+  });
+
   it("should not allow accessing user list without token", () => {
     return request
       .put(`/user/${userId}`)
       .send({ username: "testuser", password: "test1" })
       .expect(401); // Unauthorized
+  });
+
+  it("should not allow auth requests without information in the body", () => {
+    return request.post(loginEndpoint).expect(401);
   });
 
   it("should get user information", () => {
@@ -61,19 +72,52 @@ describe("# Auth", () => {
       .expect(200);
   });
 
-  it("should update user", () => {
-    console.log(userId);
-    console.log(authToken);
+  it("should get a single user based on their id", () => {
     return request
-      .put(`/user/${userId}`)
+      .get(`/user/${userId}`)
       .set("Authorization", authToken)
-      .send({ username: "testuser", password: "test1" })
-      .expect(200)
+      .expect(200);
+  });
+
+  it("should not allow two users with the same username", () => {
+    request
+      .post("/auth/register")
+      .send({ username: "testuser", password: "test" });
+    return request
+      .post("/auth/register")
+      .send({ username: "testuser", password: "test" })
+      .expect(400)
       .then((res: any) => {
-        return request
-          .post(loginEndpoint)
-          .send({ username: "testuser", password: "test1" })
-          .expect(401);
+        // tslint:disable-next-line:no-unused-expression
+        res.body.message.should.equal("Error: Username Taken");
       });
+  });
+
+  it("should update user", () => {
+    return login().then((res1: any) => {
+      authToken = res1.body.token;
+      userId = res1.body.user;
+      return request
+        .put(`/user/${userId}`)
+        .set("Authorization", authToken)
+        .send({ username: "test1", password: "test1" })
+        .expect(200)
+        .then((res: any) => {
+          return request
+            .post(loginEndpoint)
+            .send({ username: "test1", password: "test1" })
+            .expect(200);
+        });
+    });
+
+    // .then((res: any) => {
+    //     request
+    //       .post(loginEndpoint)
+    //       .send({ username: "test1", password: "test1" })
+    //       .then((res1: any) => {
+    //         authToken = res1.body.token
+    //       })
+
+    // });
   });
 });

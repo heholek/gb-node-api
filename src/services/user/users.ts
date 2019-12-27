@@ -49,18 +49,19 @@ class Users {
       const Data = new User(req.body);
       Data.save()
         .then(value => {
+          console.log(value);
           res
             .status(201)
-            .json({ message: "User saved successfully!", id: Data._id });
+            .json({ message: "User saved successfully!", id: value._id });
         })
         .catch((err: any) => {
           if (err.code === 11000) {
             res
-              .status(201)
+              .status(400)
               .json({ message: `Error: Username Taken`, errors: err });
           } else {
             res
-              .status(201)
+              .status(400)
               .json({ message: `Error: ${err.errmsg}`, errors: err });
           }
         });
@@ -77,11 +78,19 @@ class Users {
   public update = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req, true);
+      console.log(req.params.id);
 
-      await User.findByIdAndUpdate(req.params.id, req.body);
-
-      res.status(200).json({ message: "User updated successfully!" });
+      await User.findByIdAndUpdate(req.params.id, req.body)
+        .catch(err => {
+          res
+            .status(400)
+            .json({ message: "Error: Username Taken", errors: err });
+        })
+        .then(value => {
+          res.status(200).json({ message: "User updated successfully!" });
+        });
     } catch (err) {
+      console.log(err);
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
   };

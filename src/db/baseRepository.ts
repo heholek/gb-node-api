@@ -4,7 +4,7 @@
 import config from "config";
 const mongoose = require("mongoose");
 (mongoose as any).Promise = require("bluebird");
-let dbName = "dev";
+let dbName = "t";
 
 // Based on node environment, choose collection name
 if (config.get("production")) {
