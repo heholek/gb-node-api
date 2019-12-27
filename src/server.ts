@@ -11,10 +11,12 @@ import { applyMiddleware, applyRoutes } from "./utils";
 const db = require("./db/baseRepository");
 
 // Error Handling
+/* istanbul ignore next */
 process.on("uncaughtException", e => {
   console.log(e);
   process.exit(1);
 });
+/* istanbul ignore next */
 process.on("unhandledRejection", e => {
   console.log(e);
   process.exit(1);

@@ -81,5 +81,14 @@
       "pre-commit": "pretty-quick --staged && npm run lint",
       "pre-push": "npm run test"
     }
+  },
+  "nyc": {
+    "exclude": [
+      "**/errorHandlers.ts",
+      "**/ErrorHandler.ts",
+      "**/httpErrors.ts",
+      "**/baseRepository.ts",
+      "**/*.spec.ts"
+    ]
   }
 }
