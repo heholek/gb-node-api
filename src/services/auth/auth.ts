@@ -8,19 +8,6 @@ const secret = config.get("secret");
 
 class Auth {
   /**
-   * Check for username and password
-   * @param req
-   */
-  private static checkUsernamePassword(req: any): any {
-    req.checkBody("username", "Invalid username").notEmpty();
-    req.checkBody("password", "Invalid password").notEmpty();
-    const errors = req.validationErrors();
-    if (errors) {
-      return errors;
-    }
-    return false;
-  }
-  /**
    * Initialize passport strategy
    */
   public initialize = () => {

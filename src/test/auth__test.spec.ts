@@ -65,9 +65,16 @@ describe("# Auth", () => {
       .expect(200);
   });
 
-  it("should error out if a random user id is passed in", () => {
+  it("should error out if a non valid id is passed in", () => {
     return request
       .get(`/user/123213898539258`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(400);
+  });
+
+  it("should error out if a user doesnt exist for id", () => {
+    return request
+      .get(`/user/5e05753ab6da9e7d0cb5c0ab`)
       .set("Authorization", testHelper.authToken1)
       .expect(400);
   });
