@@ -65,6 +65,13 @@ describe("# Auth", () => {
       .expect(200);
   });
 
+  it("should error out if a random user id is passed in", () => {
+    return request
+      .get(`/user/123213898539258`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(400);
+  });
+
   it("should get a single user based on their id", () => {
     return request
       .get(`/user/${testHelper.userId1}`)
