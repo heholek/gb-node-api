@@ -9,18 +9,7 @@ export class TestHelper {
   private _userRoute = "/user";
   private _authToken1: string = "";
   private _userId1: string = "";
-  get registerRoute(): string {
-    return this._registerRoute;
-  }
-  set registerRoute(value: string) {
-    this._registerRoute = value;
-  }
-  get userRoute(): string {
-    return this._userRoute;
-  }
-  set userRoute(value: string) {
-    this._userRoute = value;
-  }
+
   get testUser1(): { password: string; username: string } {
     return this._testUser1;
   }
@@ -36,9 +25,7 @@ export class TestHelper {
   get loginRoute(): string {
     return this._loginRoute;
   }
-  set loginRoute(value: string) {
-    this._loginRoute = value;
-  }
+
   get authToken1(): string {
     return this._authToken1;
   }
@@ -56,15 +43,6 @@ export class TestHelper {
     await cleanCollectionOfTestUsers();
     await this.register(this.testUser1, 201);
     await this.register(this.testUser2, 201);
-  }
-
-  /**
-   * Creates a new user, either test1 or test2 baed on id
-   * @param {number} id
-   */
-  public async createUser(userModel: LoginInformation): Promise<void> {
-    const UserModel = new User(userModel);
-    await UserModel.save();
   }
 
   public async login(
