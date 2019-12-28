@@ -4,11 +4,11 @@
   "description": "Local node server on each GB",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc-watch --onSuccess \"node ./dist/server.js\"",
+    "dev": "export DB_NAME=PROD && tsc-watch --onSuccess \"node ./dist/server.js\"",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
     "pretty-quick": "pretty-quick",
-    "test": "tsc && mocha **/*.spec.js",
+    "test": "export DB_NAME=TEST &&tsc && mocha **/*.spec.js",
     "test:dev": "tsc-watch --onSuccess \" mocha **/*.spec.js\"",
     "test:coverage": "tsc && nyc --reporter=lcov --reporter=text-summary mocha **/*.spec.js",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"

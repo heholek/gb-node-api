@@ -8,7 +8,7 @@ import { IUser } from "./models/user";
 import routes from "./services";
 import auth from "./services/auth/auth";
 import { applyMiddleware, applyRoutes } from "./utils";
-const db = require("./db/baseRepository");
+require("./db/baseRepository");
 
 // Error Handling
 /* istanbul ignore next */

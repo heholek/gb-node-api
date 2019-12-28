@@ -5,7 +5,6 @@ import User from "../user/users";
 import Auth from "./auth";
 
 const root = "/auth";
-const authRequired = false;
 export default [
   {
     root,

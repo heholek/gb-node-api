@@ -2,8 +2,6 @@ import { request, TestHelper } from "./common.spec";
 
 const testHelper = new TestHelper();
 
-import { cleanCollectionOfTestUsers } from "../models/user";
-
 describe("# Auth", () => {
   it("should retrieve the token and id", () => {
     return testHelper.initializeTestEnvironment().then(value => {
