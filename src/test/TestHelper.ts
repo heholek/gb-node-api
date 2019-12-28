@@ -1,4 +1,4 @@
-import { cleanCollectionOfTestUsers, model as User } from "../models/user";
+import { cleanCollectionOfTestUsers } from "../models/user";
 import { request } from "./common.spec";
 
 export class TestHelper {

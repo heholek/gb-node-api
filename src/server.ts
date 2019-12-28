@@ -4,7 +4,6 @@ import http from "http";
 
 import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
-import { IUser } from "./models/user";
 import routes from "./services";
 import auth from "./services/auth/auth";
 import { applyMiddleware, applyRoutes } from "./utils";

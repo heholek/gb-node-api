@@ -1,5 +1,5 @@
 import io from "socket.io";
-import { IUser, model as User } from "../models/user";
+import { model as User } from "../models/user";
 
 export const server = io.listen(8000);
 
