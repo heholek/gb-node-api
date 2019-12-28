@@ -1,4 +1,5 @@
-import { request, TestHelper } from "./common.spec";
+import { request } from "./common.spec";
+import { TestHelper } from "./TestHelper";
 
 const testHelper = new TestHelper();
 

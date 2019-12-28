@@ -9,6 +9,7 @@ import routes from "./services";
 import auth from "./services/auth/auth";
 import { applyMiddleware, applyRoutes } from "./utils";
 require("./db/baseRepository");
+require("./utils/sockets");
 
 // Error Handling
 /* istanbul ignore next */

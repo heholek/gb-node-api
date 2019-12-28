@@ -28,6 +28,7 @@
     "@types/chai": "^4.2.7",
     "@types/config": "0.0.36",
     "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
     "@types/supertest": "^2.0.8",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
@@ -48,6 +49,7 @@
     "roslib": "^1.0.1",
     "rxjs": "^6.5.3",
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "socketio-jwt": "github:auth0-community/auth0-socketio-jwt",
     "supertest": "^4.0.2"
   },
