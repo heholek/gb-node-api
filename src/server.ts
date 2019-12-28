@@ -8,13 +8,15 @@ import { IUser } from "./models/user";
 import routes from "./services";
 import auth from "./services/auth/auth";
 import { applyMiddleware, applyRoutes } from "./utils";
-const db = require("./db/baseRepository");
+require("./db/baseRepository");
 
 // Error Handling
+/* istanbul ignore next */
 process.on("uncaughtException", e => {
   console.log(e);
   process.exit(1);
 });
+/* istanbul ignore next */
 process.on("unhandledRejection", e => {
   console.log(e);
   process.exit(1);
@@ -26,33 +28,6 @@ const router = express();
 // Initializes auth
 router.use(auth.initialize());
 router.use(auth.session());
-
-/**
- * Checks for auth token on all routes except login and register
- */
-router.all("*", (req, res, next) => {
-  if (req.path.includes("login") || req.path.includes("register")) {
-    return next();
-  }
-
-  return auth.authenticate((err: Error, user: IUser, info: any) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      // Checks for expired token
-      if (info.name === "TokenExpiredError") {
-        return res.status(401).json({
-          message: "Your token has expired. Please generate a new one"
-        });
-      } else {
-        return res.status(401).json({ message: info.message });
-      }
-    }
-    router.set("user", user);
-    return next();
-  })(req, res, next);
-});
 
 // Apply all middleware to function
 applyMiddleware(middleware, router);

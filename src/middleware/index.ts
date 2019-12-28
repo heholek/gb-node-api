@@ -2,6 +2,7 @@
  * Imports all middleware to provide single connection point
  */
 import {
+  checkAuth,
   expressValidate,
   handleBodyRequestParsing,
   handleCompression,
@@ -12,5 +13,6 @@ export default [
   handleCors,
   handleBodyRequestParsing,
   handleCompression,
-  expressValidate
+  expressValidate,
+  checkAuth
 ];

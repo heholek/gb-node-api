@@ -2,9 +2,7 @@
  * Main util functions
  */
 import { NextFunction, Request, Response, Router } from "express";
-import passport from "passport";
 
-const auth = passport.authenticate("jwt");
 type Wrapper = (router: Router) => void;
 
 /**
@@ -39,7 +37,7 @@ interface Route {
  * @param routes - Array of routes applied
  * @param router - Router object
  */
-export const applyRoutes = (routes: Route[], router: Router) => {
+export const applyRoutes = (routes: any[], router: Router) => {
   for (const route of routes) {
     const { method, path, handler, root } = route;
     (router as any)[method](root + path, handler);

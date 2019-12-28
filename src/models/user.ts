@@ -41,15 +41,16 @@ userSchema.pre("save", function(next) {
     next();
   });
 });
-
 /**
  * Before updating the user hashes user
  */
-userSchema.pre("update", function(next) {
+userSchema.pre("findOneAndUpdate", function(next) {
   // @ts-ignore
-  bcrypt.hash(this.password, 10, (err, hash) => {
+  const originalPassword = this.get("password");
+  bcrypt.hash(originalPassword, 10, (err, hash) => {
     // @ts-ignore
-    this.password = hash;
+    this._update.password = hash;
+    this.update();
     next();
   });
 });
@@ -74,6 +75,6 @@ userSchema.methods.comparePassword = function(
 
 export const model = mongoose.model<IUser>("User", userSchema);
 
-export const cleanCollection = () => model.remove({}).exec();
+export const cleanCollectionOfTestUsers = () => model.remove({}).exec();
 
 export default model;

@@ -4,39 +4,27 @@
 import config from "config";
 const mongoose = require("mongoose");
 (mongoose as any).Promise = require("bluebird");
-let dbName;
+let dbName = "";
 
 // Based on node environment, choose collection name
-switch (config.get("production")) {
-  case "test":
-    dbName = "test";
-    break;
-  case "production":
+switch (process.env.DB_NAME) {
+  case "PROD":
     dbName = "prod";
     break;
-  default:
+  case "DEV":
     dbName = "dev";
+    break;
+  default:
+    dbName = "test";
+    break;
 }
 
 const dbAddress = config.get("db.address");
 const dbPort = config.get("db.port");
 
-const options = {
-  useMongoClient: true,
-  user: "",
-  pass: ""
-};
-
-// Check for auth needed
-if (config.get("db.auth")) {
-  options.user = config.get("db.username");
-  options.pass = config.get("db.password");
-}
-
 // Connect to mongo
 mongoose
-  // .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`)
-  .connect("mongodb://127.0.0.1:27017/?")
+  .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`)
   .catch((err: Error) => {
     if (err.message.indexOf("ECONNREFUSED") !== -1) {
       console.error(
