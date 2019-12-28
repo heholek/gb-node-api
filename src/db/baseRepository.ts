@@ -2,7 +2,7 @@
  * Handles connection to mongo database
  */
 import config from "config";
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 (mongoose as any).Promise = require("bluebird");
 let dbName = "";
 

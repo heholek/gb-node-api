@@ -1,15 +1,15 @@
-# gb-local-node-server
+# gb-node-api
 
 [![CodeFactor](https://www.codefactor.io/repository/github/garbagebytes/gb-node-api/badge)](https://www.codefactor.io/repository/github/garbagebytes/gb-node-api)
 
 **Master**
 
-[![Build Status](https://travis-ci.org/GarbageBytes/gb-local-node-server.svg?branch=master)](https://travis-ci.org/GarbageBytes/gb-local-node-server)
+[![Build Status](https://travis-ci.org/GarbageBytes/gb-node-api.svg?branch=master)](https://travis-ci.org/GarbageBytes/gb-node-api)
 [![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-local-node-server/badge.svg?branch=master)](https://coveralls.io/github/GarbageBytes/gb-local-node-server?branch=master)
 
 **Development**
 
-[![Build Status](https://travis-ci.org/GarbageBytes/gb-local-node-server.svg?branch=development)](https://travis-ci.org/GarbageBytes/gb-local-node-server)
+[![Build Status](https://travis-ci.org/GarbageBytes/gb-node-api.svg?branch=development)](https://travis-ci.org/GarbageBytes/gb-node-api)
 [![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-local-node-server/badge.svg?branch=development)](https://coveralls.io/github/GarbageBytes/gb-local-node-server?branch=development)
 
 Local node server on each GB. Typescript based NodeJS Server.
