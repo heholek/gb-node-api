@@ -1,5 +1,7 @@
 # gb-local-node-server
 
+[![CodeFactor](https://www.codefactor.io/repository/github/garbagebytes/gb-node-api/badge)](https://www.codefactor.io/repository/github/garbagebytes/gb-node-api)
+
 **Master**
 
 [![Build Status](https://travis-ci.org/GarbageBytes/gb-local-node-server.svg?branch=master)](https://travis-ci.org/GarbageBytes/gb-local-node-server)
