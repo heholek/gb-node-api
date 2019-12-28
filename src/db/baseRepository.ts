@@ -23,8 +23,19 @@ const dbAddress = config.get("db.address");
 const dbPort = config.get("db.port");
 
 // Connect to mongo
+mongoose.set("useCreateIndex", true);
 mongoose
-  .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`)
+  .connect(`mongodb://${dbAddress}:${dbPort}/${dbName}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  })
+  .then(value => {
+    console.log(
+      "MongoDB connected at " + `mongodb://${dbAddress}:${dbPort}/${dbName}`
+    );
+  })
   .catch((err: Error) => {
     if (err.message.indexOf("ECONNREFUSED") !== -1) {
       console.error(

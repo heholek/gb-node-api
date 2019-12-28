@@ -75,6 +75,6 @@ userSchema.methods.comparePassword = function(
 
 export const model = mongoose.model<IUser>("User", userSchema);
 
-export const cleanCollectionOfTestUsers = () => model.remove({}).exec();
+export const cleanCollectionOfTestUsers = () => model.deleteMany({}).exec();
 
 export default model;

@@ -1,6 +1,7 @@
 # gb-node-api
 
 [![CodeFactor](https://www.codefactor.io/repository/github/garbagebytes/gb-node-api/badge)](https://www.codefactor.io/repository/github/garbagebytes/gb-node-api)
+[![DeepScan grade](https://deepscan.io/api/teams/6561/projects/8572/branches/105540/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=6561&pid=8572&bid=105540)
 
 **Master**
 
