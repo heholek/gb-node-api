@@ -8,8 +8,7 @@
     "object-literal-sort-keys": false,
     "no-var-requires": false,
     "variable-name": false,
-    "quotemark": [true, "double"],
-    "no-unused-variable": true
+    "quotemark": [true, "double"]
   },
   "rulesDirectory": [],
   "extends": ["tslint:latest", "tslint-config-prettier"]
