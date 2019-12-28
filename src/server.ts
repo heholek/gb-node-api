@@ -29,26 +29,6 @@ const router = express();
 router.use(auth.initialize());
 router.use(auth.session());
 
-/**
- * Checks for auth token on all routes except login and register
- */
-router.all("*", (req, res, next) => {
-  if (req.path.includes("login") || req.path.includes("register")) {
-    return next();
-  }
-
-  return auth.authenticate((err: Error, user: IUser, info: any) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({ message: info.message });
-    }
-    router.set("user", user);
-    return next();
-  })(req, res, next);
-});
-
 // Apply all middleware to function
 applyMiddleware(middleware, router);
 
