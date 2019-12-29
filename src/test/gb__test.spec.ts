@@ -1,5 +1,5 @@
 import { request } from "./common.spec";
-import { GbHelper, TestHelper } from "./TestHelper";
+import { GbHelper } from "./TestHelper";
 const gbHelper = new GbHelper();
 
 describe("# Gb", () => {

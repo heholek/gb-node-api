@@ -1,4 +1,3 @@
-import config from "config";
 import passport from "passport";
 import { model as User } from "../../models/user";
 import { genToken, getStrategy } from "../../utils/authStrategy";
