@@ -7,11 +7,13 @@
 
 [![Build Status](https://travis-ci.org/GarbageBytes/gb-node-api.svg?branch=master)](https://travis-ci.org/GarbageBytes/gb-node-api)
 [![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-node-api/badge.svg?branch=master)](https://coveralls.io/github/GarbageBytes/gb-node-api?branch=master)
+[![codebeat badge](https://codebeat.co/badges/b5eb3416-def9-464e-a651-f70dd122e76f)](https://codebeat.co/projects/github-com-garbagebytes-gb-node-api-master)
 
 **Development**
 
 [![Build Status](https://travis-ci.org/GarbageBytes/gb-node-api.svg?branch=development)](https://travis-ci.org/GarbageBytes/gb-node-api)
 [![Coverage Status](https://coveralls.io/repos/github/GarbageBytes/gb-node-api/badge.svg?branch=development)](https://coveralls.io/github/GarbageBytes/gb-node-api?branch=development)
+[![codebeat badge](https://codebeat.co/badges/49d9c564-c987-4772-af8e-b59e152b244d)](https://codebeat.co/projects/github-com-garbagebytes-gb-node-api-development)
 
 Local node server on each GB. Typescript based NodeJS Server.
 
