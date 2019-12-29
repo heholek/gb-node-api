@@ -4,11 +4,12 @@ import { model as Gb } from "../../models/gb";
 import { genToken, getStrategy } from "../../utils/authStrategy";
 
 class Gbs {
+  /* istanbul ignore next */
   public initialize = () => {
     passport.use("jwt", getStrategy(Gb, 2));
     return passport.initialize();
   };
-
+  /* istanbul ignore next */
   public session = () => {
     return passport.session();
   };
@@ -31,9 +32,6 @@ class Gbs {
       const gb = await Gb.findOne({ username: req.body.username }).exec();
 
       if (gb === null) {
-        res
-          .status(401)
-          .json({ message: "Invalid credentials", errors: "User not found!" });
         throw new Error();
       }
 
@@ -118,19 +116,19 @@ class Gbs {
    * @param res
    */
   public update = async (req: Request, res: Response) => {
+    let message = "Missing parameters";
     try {
-      this.validateRequest(req, true);
+      this.validateRequest(req, false);
       await Gb.findByIdAndUpdate(req.params.id, req.body)
         .catch(err => {
-          res
-            .status(400)
-            .json({ message: "Error: Username Taken", errors: err });
+          message = "Error: Username Taken";
+          throw new Error(err);
         })
         .then(() => {
           res.status(200).json({ message: "User updated successfully!" });
         });
     } catch (err) {
-      res.status(400).json({ message: "Missing parameters", errors: err });
+      res.status(400).json({ message, errors: err });
     }
   };
 
@@ -141,7 +139,9 @@ class Gbs {
    */
   public delete = async (req: Request, res: Response) => {
     try {
-      await Gb.findByIdAndRemove(req.params.id);
+      await Gb.findByIdAndRemove(req.params.id).catch(err => {
+        throw new Error();
+      });
       res.status(200).json({ message: "User deleted successfully!" });
     } catch (err) {
       res.status(400).json({ message: `Error delete user: ${err}` });

@@ -13,15 +13,11 @@ export class TestHelper {
   get testUser1(): { password: string; username: string } {
     return this._testUser1;
   }
-  set testUser1(value: { password: string; username: string }) {
-    this._testUser1 = value;
-  }
+
   get testUser2(): { password: string; username: string } {
     return this._testUser2;
   }
-  set testUser2(value: { password: string; username: string }) {
-    this._testUser2 = value;
-  }
+
   get loginRoute(): string {
     return this._loginRoute;
   }
@@ -37,15 +33,6 @@ export class TestHelper {
   }
   set userId1(value: string) {
     this._userId1 = value;
-  }
-
-  constructor(loginRoute?: string, registerRoute?: string) {
-    if (loginRoute) {
-      this._loginRoute = loginRoute;
-    }
-    if (registerRoute) {
-      this._registerRoute = registerRoute;
-    }
   }
 
   public async initializeTestEnvironment(): Promise<any> {
@@ -93,10 +80,6 @@ export class GbHelper extends TestHelper {
 
   get gbLoginRoute(): string {
     return this._gbLoginRoute;
-  }
-
-  get gbRegisterRoute(): string {
-    return this._gbRegisterRoute;
   }
 
   get gbAuthToken(): string {
