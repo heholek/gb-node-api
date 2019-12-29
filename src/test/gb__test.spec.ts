@@ -17,11 +17,11 @@ describe("# Gb", () => {
   });
 
   it("should create a new gb", () => {
-    return gbHelper.registerGb({ username: "gb1", password: "gb" }, 201);
+    return gbHelper.registerGb({ username: "gb", password: "gb" }, 201);
   });
 
   it("should not allow two gbs with the same username", () => {
-    return gbHelper.registerGb({ username: "gb1", password: "gb" }, 400);
+    return gbHelper.registerGb({ username: "gb", password: "gb" }, 400);
   });
 
   it("should not create gb without password", () => {
@@ -37,14 +37,14 @@ describe("# Gb", () => {
   });
 
   it("should not login with wrong password", () => {
-    return gbHelper.loginGb({ username: "gb1", password: "wrong" }, 401);
+    return gbHelper.loginGb({ username: "gb", password: "wrong" }, 401);
   });
 
   it("should login as gb", () => {
-    return gbHelper.loginGb({ username: "gb1", password: "gb" }, 200);
+    return gbHelper.loginGb({ username: "gb", password: "gb" }, 200);
   });
 
-  it("should not edit gb without token", () => {
+  it("should not get a list of gbs without token", () => {
     return request.get("/gb").expect(401);
   });
 
@@ -68,7 +68,7 @@ describe("# Gb", () => {
     request
       .put(`/gb/${gbHelper.gbId}`)
       .set("Authorization", gbHelper.authToken1)
-      .send({ username: "gb2", password: "gb", gb_auth: gbHelper.gbAuthToken })
+      .send({ username: "gb1", password: "gb", gb_auth: gbHelper.gbAuthToken })
       .expect(200)
       .then((res: any) => {
         request
@@ -77,7 +77,7 @@ describe("# Gb", () => {
           .send({ gb_auth: gbHelper.gbAuthToken })
           .expect(200)
           .then((res1: any) => {
-            res1.body.username.should.equal("gb2");
+            res1.body.username.should.equal("gb1");
             done();
           });
       });
@@ -86,7 +86,8 @@ describe("# Gb", () => {
   it("shouldn't allow updating if gb already has name", done => {
     gbHelper
       .registerGb({ username: "nametaken", password: "gb" }, 201)
-      .then(() => {
+      .then(res1 => {
+        gbHelper.gbIdToDelete = res1.body.id;
         request
           .put(`/gb/${gbHelper.gbId}`)
           .set("Authorization", gbHelper.authToken1)
@@ -129,9 +130,9 @@ describe("# Gb", () => {
 
   it("should delete the byte", () => {
     return request
-      .del(`/gb/${gbHelper.gbId}`)
+      .del(`/gb/${gbHelper.gbIdToDelete}`)
       .set("Authorization", gbHelper.authToken1)
-      .send({ password: "gb", gb_auth: gbHelper.gbAuthToken })
+      .send({ gb_auth: gbHelper.gbAuthToken })
       .expect(200);
   });
 

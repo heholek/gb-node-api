@@ -73,6 +73,15 @@ export class GbHelper extends TestHelper {
   private _gbRegisterRoute: string;
   private _gbAuthToken: string = "";
   private _gbId: string = "";
+  private _gbIdToDelete: string = "";
+
+  set gbIdToDelete(value: string) {
+    this._gbIdToDelete = value;
+  }
+
+  get gbIdToDelete(): string {
+    return this._gbIdToDelete;
+  }
 
   get gbId(): string {
     return this._gbId;

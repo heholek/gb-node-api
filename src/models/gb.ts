@@ -49,6 +49,8 @@ comparePassword(gbSchema);
 
 export const model = mongoose.model<IGb>("gb", gbSchema);
 
+// @ts-ignore
 export const cleanCollectionOfTestGbs = () => model.deleteMany({}).exec(); // For testing
 
+// @ts-ignore
 export default model;

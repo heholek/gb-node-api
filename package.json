@@ -4,7 +4,8 @@
   "description": "Local node server on each GB",
   "main": "index.js",
   "scripts": {
-    "dev": "export DB_NAME=PROD && tsc-watch --onSuccess \"node ./dist/server.js\"",
+    "dev": "export DB_NAME=DEV && tsc-watch --onSuccess \"node ./dist/server.js\"",
+    "dev:test": "export DB_NAME=TEST && tsc-watch --onSuccess \"node ./dist/server.js\"",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
     "pretty-quick": "pretty-quick",
