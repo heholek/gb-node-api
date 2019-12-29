@@ -43,6 +43,7 @@ export const gbSchema: Schema = new Schema<any>(
   { timestamps: true }
 );
 
+// Setup password hashing and such
 preSaveHashPassword(gbSchema);
 preUpdateHashPassword(gbSchema);
 comparePassword(gbSchema);
