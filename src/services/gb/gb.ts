@@ -1,7 +1,53 @@
 import { Request, Response } from "express";
-import { model as User } from "../../models/user";
+import passport from "passport";
+import { model as Gb } from "../../models/gb";
+import { genToken, getStrategy } from "../../utils/authStrategy";
 
-class Users {
+class Gbs {
+  public initialize = () => {
+    passport.use("jwt", getStrategy(Gb, 2));
+    return passport.initialize();
+  };
+
+  public session = () => {
+    return passport.session();
+  };
+
+  /**
+   * User login
+   * @param req
+   * @param res
+   */
+  public login = async (req: any, res: any) => {
+    try {
+      req.checkBody("username", "Invalid username").notEmpty();
+      req.checkBody("password", "Invalid password").notEmpty();
+
+      const errors = req.validationErrors();
+      if (errors) {
+        throw errors;
+      }
+
+      const gb = await Gb.findOne({ username: req.body.username }).exec();
+
+      if (gb === null) {
+        res
+          .status(401)
+          .json({ message: "Invalid credentials", errors: "User not found!" });
+        throw new Error();
+      }
+
+      const success = await gb.comparePassword(req.body.password);
+      if (!success) {
+        throw new Error("");
+      }
+
+      res.status(200).json(genToken(gb), gb.id);
+    } catch (err) {
+      res.status(401).json({ message: "Invalid credentials", errors: err });
+    }
+  };
+
   /**
    * Get all the users in an array
    * @param req
@@ -9,7 +55,7 @@ class Users {
    */
   public getAll = async (req: Request, res: Response) => {
     try {
-      const users = await User.find({}).exec();
+      const users = await Gb.find({}).exec();
       res.status(200).json(users);
     } catch (err) {
       /* istanbul ignore next */
@@ -24,7 +70,7 @@ class Users {
    */
   public getOne = async (req: Request, res: Response) => {
     try {
-      const user = await User.findById(req.params.id).exec();
+      const user = await Gb.findById(req.params.id).exec();
 
       if (user === null) {
         return res.status(404).json({ message: "This user doesn't exist" });
@@ -37,7 +83,7 @@ class Users {
   };
 
   /**
-   * Create a new user
+   * Create a new Gb
    * @param req contains "username" and "password"
    * @param res
    * @returns User ID
@@ -45,18 +91,16 @@ class Users {
   public create = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req);
-      const Data = new User(req.body);
+      const Data = new Gb(req.body);
       Data.save()
         .then(value => {
           res
             .status(201)
-            .json({ message: "User saved successfully!", id: value._id });
+            .json({ message: "Name saved successfully!", id: value._id });
         })
         .catch((err: any) => {
           if (err.code === 11000) {
-            res
-              .status(400)
-              .json({ message: `Error: Username Taken`, errors: err });
+            res.status(400).json({ message: `Error: Name Taken`, errors: err });
           } else {
             res
               .status(400)
@@ -76,13 +120,13 @@ class Users {
   public update = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req, true);
-      await User.findByIdAndUpdate(req.params.id, req.body)
+      await Gb.findByIdAndUpdate(req.params.id, req.body)
         .catch(err => {
           res
             .status(400)
             .json({ message: "Error: Username Taken", errors: err });
         })
-        .then(value => {
+        .then(() => {
           res.status(200).json({ message: "User updated successfully!" });
         });
     } catch (err) {
@@ -97,7 +141,7 @@ class Users {
    */
   public delete = async (req: Request, res: Response) => {
     try {
-      await User.findByIdAndRemove(req.params.id);
+      await Gb.findByIdAndRemove(req.params.id);
       res.status(200).json({ message: "User deleted successfully!" });
     } catch (err) {
       res.status(400).json({ message: `Error delete user: ${err}` });
@@ -111,7 +155,7 @@ class Users {
    */
   private validateRequest = (req: any, update = false) => {
     if (!update) {
-      req.checkBody("username", "The username cannot be empty").notEmpty();
+      req.checkBody("username", "The name cannot be empty").notEmpty();
       req.checkBody("password", "The password cannot be empty").notEmpty();
 
       const errors = req.validationErrors();
@@ -126,4 +170,4 @@ class Users {
   };
 }
 
-export default new Users();
+export default new Gbs();

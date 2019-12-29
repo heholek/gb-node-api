@@ -1,5 +1,12 @@
-import * as bcrypt from "bcryptjs";
+/**
+ * User Model for Database
+ */
 import mongoose, { Document, Schema } from "mongoose";
+import {
+  comparePassword,
+  preSaveHashPassword,
+  preUpdateHashPassword
+} from "./dbHelpers";
 
 /**
  * Creates interface for the user
@@ -30,48 +37,9 @@ export const userSchema: Schema = new Schema(
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
-/**
- * Before saving user, hashes the password
- */
-userSchema.pre("save", function(next) {
-  const originalPassword = this.get("password");
-  bcrypt.hash(originalPassword, 10, (err, hash) => {
-    this.set("password", hash);
-    // console.log("done");
-    next();
-  });
-});
-/**
- * Before updating the user hashes user
- */
-userSchema.pre("findOneAndUpdate", function(next) {
-  // @ts-ignore
-  const originalPassword = this.get("password");
-  bcrypt.hash(originalPassword, 10, (err, hash) => {
-    // @ts-ignore
-    this._update.password = hash;
-    this.update();
-    next();
-  });
-});
-
-/**
- * Compares passwords for logging in
- * @param candidatePassword
- */
-userSchema.methods.comparePassword = function(
-  candidatePassword: string
-): Promise<boolean> {
-  const password = this.password;
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(candidatePassword, password, (err, success) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve(success);
-    });
-  });
-};
+preSaveHashPassword(userSchema);
+preUpdateHashPassword(userSchema);
+comparePassword(userSchema);
 
 export const model = mongoose.model<IUser>("User", userSchema);
 

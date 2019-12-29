@@ -2,15 +2,15 @@ import config from "config";
 import express from "express";
 import http from "http";
 
+import "./db/baseRepository";
 import middleware from "./middleware";
 import errorHandlers from "./middleware/errorHandlers";
 import routes from "./services";
 import auth from "./services/auth/auth";
 import { applyMiddleware, applyRoutes } from "./utils";
-require("./db/baseRepository");
-require("./utils/sockets");
+import "./utils/sockets";
 
-// Error Handling
+// Error Handling, ignore for tests
 /* istanbul ignore next */
 process.on("uncaughtException", e => {
   console.log(e);
@@ -24,7 +24,6 @@ process.on("unhandledRejection", e => {
 
 const router = express();
 
-// TODO MOVE TO MIDDLEWARE FUNCTION
 // Initializes auth
 router.use(auth.initialize());
 router.use(auth.session());
