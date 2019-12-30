@@ -1,6 +1,6 @@
 {
   "name": "gb-local-node-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Local node server on each GB",
   "main": "index.js",
   "scripts": {
