@@ -7,6 +7,7 @@ describe("# Socket", () => {
     const socket = io.connect("http://localhost:8000/gb1");
     // tslint:disable-next-line:no-unused-expression
     socket.on("error", (err: any) => {
+      console.log(err);
       expect(err).to.equal("Authentication Error");
       done();
     });

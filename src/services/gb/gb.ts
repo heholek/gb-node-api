@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import passport from "passport";
 import { model as Gb } from "../../models/gb";
 import { genToken, getStrategy } from "../../utils/authStrategy";
+import { initializeSockets } from "../../utils/sockets";
 
 class Gbs {
   /* istanbul ignore next */
@@ -108,6 +109,7 @@ class Gbs {
     } catch (err) {
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
+    initializeSockets().then();
   };
 
   /**
@@ -130,6 +132,7 @@ class Gbs {
     } catch (err) {
       res.status(400).json({ message, errors: err });
     }
+    initializeSockets().then();
   };
 
   /**
@@ -146,6 +149,7 @@ class Gbs {
     } catch (err) {
       res.status(400).json({ message: `Error delete user: ${err}` });
     }
+    initializeSockets().then();
   };
 
   /**

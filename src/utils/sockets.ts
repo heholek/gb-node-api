@@ -1,7 +1,21 @@
-import io, { Server } from "socket.io";
+import io from "socket.io";
 import { IGb, model as Gb } from "../models/gb";
 
-export const server = io.listen(8000);
+const server = io.listen(8000);
+const topicsToSubscribe = [
+  "test",
+  "rwheel_encoder",
+  "lwheel_encoder",
+  "distance_front",
+  "distance_rear",
+  "distance_right",
+  "distance_left",
+  "distance_bottom",
+  "position",
+  "speed",
+  "angle",
+  "number_of_satellites"
+];
 
 /**
  * Server auth using username and password of Gb
@@ -33,12 +47,12 @@ server.use(async (socket, next) => {
 /**
  * Initialize sockets for all gbs in database
  */
-const initializeSockets = async (): Promise<any> => {
+export const initializeSockets = async (): Promise<any> => {
   const gbs = await Gb.find({}).exec();
 
   gbs.forEach(gb => {
     updateDatabaseWithSocketInformation(gb);
-
+    console.log(gb.username + " socket initialized");
     Gb.findByIdAndUpdate(gb.id, gb);
   });
 
@@ -53,7 +67,7 @@ initializeSockets().then((v: IGb[]) => {
 
 const updateDatabaseWithSocketInformation = (gb: any) => {
   server.of(`/${gb.username}`).on("connection", s => {
-    topicInformation.forEach(topic => {
+    topicsToSubscribe.forEach(topic => {
       s.on(topic, message => {
         // console.log("Message published on " + topic + ": ", message);
       });
@@ -61,17 +75,4 @@ const updateDatabaseWithSocketInformation = (gb: any) => {
   });
 };
 
-const topicInformation = [
-  "test",
-  "rwheel_encoder",
-  "lwheel_encoder",
-  "distance_front",
-  "distance_rear",
-  "distance_right",
-  "distance_left",
-  "distance_bottom",
-  "position",
-  "speed",
-  "angle",
-  "number_of_satellites"
-];
+export { server };
