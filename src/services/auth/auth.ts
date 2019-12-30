@@ -1,17 +1,13 @@
-const jwt = require("jwt-simple");
-import config from "config";
 import passport from "passport";
-import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
-import { IUser, model as User } from "../../models/user";
-
-const secret = config.get("secret");
+import { model as User } from "../../models/user";
+import { genToken, getStrategy } from "../../utils/authStrategy";
 
 class Auth {
   /**
    * Initialize passport strategy
    */
   public initialize = () => {
-    passport.use("jwt", this.getStrategy());
+    passport.use("jwt", getStrategy(User, 1));
     return passport.initialize();
   };
 
@@ -22,7 +18,7 @@ class Auth {
   public authenticate = (callback: any) =>
     passport.authenticate(
       "jwt",
-      { session: false, failWithError: true },
+      { session: true, failWithError: true },
       callback
     );
 
@@ -38,7 +34,6 @@ class Auth {
 
       const errors = req.validationErrors();
       if (errors) {
-        console.error(errors);
         throw errors;
       }
 
@@ -53,57 +48,10 @@ class Auth {
         throw new Error("");
       }
 
-      res.status(200).json(this.genToken(user), user.id);
+      res.status(200).json(genToken(user), user.id);
     } catch (err) {
-      console.error(err);
       res.status(401).json({ message: "Invalid credentials", errors: err });
     }
-  };
-
-  /**
-   * Generate token for specific user
-   * @param user User object
-   */
-  private genToken = (user: IUser): object => {
-    const token = jwt.encode(
-      {
-        username: user.username
-      },
-      secret
-    );
-
-    return {
-      token: "JWT " + token,
-      user: user._id
-    };
-  };
-
-  private getStrategy = (): Strategy => {
-    const params = {
-      secretOrKey: secret,
-      jwtFromRequest: ExtractJwt.fromAuthHeader(),
-      passReqToCallback: true
-    };
-
-    return new Strategy(
-      params as StrategyOptions,
-      (req: any, payload: any, done: any) => {
-        User.findOne({ username: payload.username }, (err, user) => {
-          /* istanbul ignore next: passport response */
-          if (err) {
-            return done(err);
-          }
-          /* istanbul ignore next: passport response */
-          if (user === null) {
-            return done(null, false, {
-              message: "The user in the token was not found"
-            });
-          }
-
-          return done(null, { _id: user._id, username: user.username });
-        });
-      }
-    );
   };
 }
 

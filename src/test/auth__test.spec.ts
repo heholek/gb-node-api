@@ -1,11 +1,10 @@
 import { request } from "./common.spec";
 import { TestHelper } from "./TestHelper";
-
 const testHelper = new TestHelper();
 
 describe("# Auth", () => {
-  it("should retrieve the token and id", () => {
-    return testHelper.initializeTestEnvironment().then(value => {
+  it("should retrieve the token and id", done => {
+    testHelper.initializeTestEnvironment().then(() => {
       testHelper.login(testHelper.testUser1, 200).then((res1: any) => {
         // tslint:disable-next-line:no-unused-expression
         res1.body.token.should.not.be.empty;
@@ -13,6 +12,7 @@ describe("# Auth", () => {
         res1.body.user.should.not.be.empty;
         testHelper.authToken1 = res1.body.token;
         testHelper.userId1 = res1.body.user;
+        done();
       });
     });
   });
@@ -53,7 +53,7 @@ describe("# Auth", () => {
     return request.put(`/user`).expect(401); // Unauthorized
   });
 
-  it("should not allow auth requests without information in the body", () => {
+  it("should not allow login without information in the body", () => {
     return request.post(testHelper.loginRoute).expect(401);
   });
 

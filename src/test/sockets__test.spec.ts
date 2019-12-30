@@ -15,7 +15,7 @@ describe("# Socket", () => {
 
   it("should let users connect that have the proper authorization", done => {
     const socket = io.connect("http://localhost:8000/gb1", {
-      query: { username: "test1", password: "test1" }
+      query: { username: "gb1", password: "gb" }
     });
     // tslint:disable-next-line:no-unused-expression
     return socket.on("connect", (msg: any) => {

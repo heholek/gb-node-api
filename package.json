@@ -1,17 +1,19 @@
 {
   "name": "gb-local-node-server",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Local node server on each GB",
   "main": "index.js",
   "scripts": {
-    "dev": "export DB_NAME=PROD && tsc-watch --onSuccess \"node ./dist/server.js\"",
+    "dev": "export DB_NAME=DEV && tsc-watch --onSuccess \"node ./dist/server.js\"",
+    "dev:test": "export DB_NAME=TEST && tsc-watch --onSuccess \"node ./dist/server.js\"",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
     "pretty-quick": "pretty-quick",
-    "test": "export DB_NAME=TEST &&tsc && mocha **/*.spec.js",
+    "test": "export DB_NAME=TEST && tsc && mocha **/*.spec.js",
     "test:dev": "tsc-watch --onSuccess \" mocha **/*.spec.js\"",
     "test:coverage": "tsc && nyc --reporter=lcov --reporter=text-summary mocha **/*.spec.js",
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -50,7 +52,6 @@
     "rxjs": "^6.5.3",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
-    "socketio-jwt": "github:auth0-community/auth0-socketio-jwt",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
