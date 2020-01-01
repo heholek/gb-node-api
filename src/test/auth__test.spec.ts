@@ -19,17 +19,17 @@ describe("# Auth", () => {
 
   it("should not login with the right user but wrong password", () => {
     return testHelper.login(
-      { username: testHelper.testUser1.username, password: "wrongpassword" },
+      { email: testHelper.testUser1.email, password: "wrongpassword" },
       401
     );
   });
 
-  it("should return invalid credentials error if no password or a nonexistant username is sent", () => {
+  it("should return invalid credentials error if no password or a nonexistant email is sent", () => {
     return testHelper
-      .login({ username: testHelper.testUser1.username, password: "" }, 401)
+      .login({ email: testHelper.testUser1.email, password: "" }, 401)
       .then(res => {
         return testHelper.login(
-          { username: "anotherusername", password: "fakepass" },
+          { email: "anotheremail", password: "fakepass" },
           401
         );
       });
@@ -37,14 +37,14 @@ describe("# Auth", () => {
 
   it("should create user", () => {
     return testHelper.register(
-      { username: "test " + Date.now().toString(), password: "test" },
+      { email: "test " + Date.now().toString(), password: "test" },
       201
     );
   });
 
   it("should not create user without password", () => {
     return testHelper.register(
-      { username: "test " + Date.now().toString(), password: "" },
+      { email: "test " + Date.now().toString(), password: "" },
       400
     );
   });
@@ -85,10 +85,10 @@ describe("# Auth", () => {
       .expect(200);
   });
 
-  it("should not allow two users with the same username", () => {
+  it("should not allow two users with the same email", () => {
     return testHelper.register(testHelper.testUser1, 400).then((res: any) => {
       // tslint:disable-next-line:no-unused-expression
-      res.body.message.should.equal("Error: Username Taken");
+      res.body.message.should.equal("Error: Email Taken");
     });
   });
 
@@ -96,12 +96,12 @@ describe("# Auth", () => {
     return request
       .put(`/user/${testHelper.userId1}`)
       .set("Authorization", testHelper.authToken1)
-      .send({ username: "test1", password: "test1" })
+      .send({ email: "test1", password: "test1" })
       .expect(200)
       .then((res: any) => {
         return request
           .post(testHelper.loginRoute)
-          .send({ username: "test1", password: "test1" })
+          .send({ email: "test1", password: "test1" })
           .expect(200);
       });
   });

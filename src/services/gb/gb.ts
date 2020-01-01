@@ -98,6 +98,7 @@ class Gbs {
             .json({ message: "Name saved successfully!", id: value._id });
         })
         .catch((err: any) => {
+          // console.log(err);
           if (err.code === 11000) {
             res.status(400).json({ message: `Error: Name Taken`, errors: err });
           } else {

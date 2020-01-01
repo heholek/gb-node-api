@@ -29,7 +29,7 @@ class Auth {
    */
   public login = async (req: any, res: any) => {
     try {
-      req.checkBody("username", "Invalid username").notEmpty();
+      req.checkBody("email", "Invalid username").notEmpty();
       req.checkBody("password", "Invalid password").notEmpty();
 
       const errors = req.validationErrors();
@@ -37,7 +37,7 @@ class Auth {
         throw errors;
       }
 
-      const user = await User.findOne({ username: req.body.username }).exec();
+      const user = await User.findOne({ email: req.body.email }).exec();
 
       if (user === null) {
         throw new Error("User not found");
@@ -48,7 +48,7 @@ class Auth {
         throw new Error("");
       }
 
-      res.status(200).json(genToken(user), user.id);
+      res.status(200).json(genToken(user));
     } catch (err) {
       res.status(401).json({ message: "Invalid credentials", errors: err });
     }

@@ -1,7 +1,8 @@
+import config from "config";
 import io from "socket.io";
 import { IGb, model as Gb } from "../models/gb";
 
-const server = io.listen(8000);
+const server = io.listen(config.get("socketPort"));
 const topicsToSubscribe = [
   "test",
   "rwheel_encoder",
@@ -28,7 +29,7 @@ server.use(async (socket, next) => {
     socket.handshake.query.username
   ) {
     const gb = await Gb.findOne({
-      username: socket.handshake.query.username
+      email: socket.handshake.query.username
     });
     if (gb === null) {
       next(new Error("User not found"));

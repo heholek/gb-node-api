@@ -13,9 +13,30 @@ import {
  */
 export interface IUser extends Document {
   name: string;
-  username: string;
+  email: string;
   password: string;
+  role: string;
+  settings: Settings;
+  address: Address;
+  updates: Update[];
   comparePassword(candidatePassword: string): Promise<boolean>;
+}
+
+export interface Address {
+  street: string;
+  city: string;
+  zipCode: string;
+}
+
+export interface Update {
+  status: string;
+  title: string;
+  message: string;
+  read: boolean;
+}
+
+export interface Settings {
+  themeName: string;
 }
 
 /**
@@ -23,8 +44,7 @@ export interface IUser extends Document {
  */
 export const userSchema: Schema = new Schema(
   {
-    name: String,
-    username: {
+    email: {
       type: String,
       required: true,
       unique: true

@@ -36,6 +36,25 @@ class Users {
     }
   };
 
+  public getCurrent = async (req: Request, res: Response) => {
+    try {
+      let user;
+      // @ts-ignore
+      if (req?.user?.id) {
+        // @ts-ignore
+        user = await User.findById(req.user.id).exec();
+      }
+
+      if (user === null) {
+        return res.status(404).json({ message: "This user doesn't exist" });
+      }
+
+      res.status(200).json(user);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  };
+
   /**
    * Create a new user
    * @param req contains "username" and "password"
@@ -56,7 +75,7 @@ class Users {
           if (err.code === 11000) {
             res
               .status(400)
-              .json({ message: `Error: Username Taken`, errors: err });
+              .json({ message: `Error: Email Taken`, errors: err });
           } else {
             res
               .status(400)
@@ -111,7 +130,7 @@ class Users {
    */
   private validateRequest = (req: any, update = false) => {
     if (!update) {
-      req.checkBody("username", "The username cannot be empty").notEmpty();
+      req.checkBody("email", "The email cannot be empty").notEmpty();
       req.checkBody("password", "The password cannot be empty").notEmpty();
 
       const errors = req.validationErrors();

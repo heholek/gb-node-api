@@ -25,5 +25,11 @@ export default [
     path: "/:id",
     method: "delete",
     handler: User.delete
+  },
+  {
+    root,
+    path: "current",
+    method: "get",
+    handler: User.getCurrent
   }
 ];

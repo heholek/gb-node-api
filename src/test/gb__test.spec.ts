@@ -18,6 +18,7 @@ describe("# Gb", () => {
 
   it("should create a new gb", () => {
     return gbHelper.registerGb({ username: "gb", password: "gb" }, 201);
+    return gbHelper.registerGb({ username: "gb", password: "gb" }, 201);
   });
 
   it("should not allow two gbs with the same username", () => {
