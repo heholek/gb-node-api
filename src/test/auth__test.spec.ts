@@ -10,7 +10,6 @@ describe("# Auth", () => {
         res1.body.token.should.not.be.empty;
         // tslint:disable-next-line:no-unused-expression
         res1.body.user.should.not.be.empty;
-        console.log(res1.body);
         testHelper.authToken1 = res1.body.token;
         testHelper.userId1 = res1.body.user._id;
         done();

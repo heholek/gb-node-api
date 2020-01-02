@@ -8,7 +8,7 @@ import errorHandlers from "./middleware/errorHandlers";
 import routes from "./services";
 import auth from "./services/auth/auth";
 import { applyMiddleware, applyRoutes } from "./utils";
-import "./utils/sockets";
+import { initializeSockets } from "./utils/sockets";
 
 // Error Handling, ignore for tests
 /* istanbul ignore next */
@@ -40,6 +40,10 @@ applyMiddleware(errorHandlers, router);
 // tslint:disable-next-line:no-bitwise
 const port = Number(config.get("port")) | 3000;
 const server = http.createServer(router);
+
+initializeSockets().then(v => {
+  console.log("All Sockets Initialized");
+});
 
 // Listen on port
 server.listen(port, () =>

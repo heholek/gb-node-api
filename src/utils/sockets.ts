@@ -1,8 +1,8 @@
 import config from "config";
 import io from "socket.io";
-import { IGb, model as Gb } from "../models/gb";
+import { model as Gb } from "../models/gb";
 
-const server = io.listen(config.get("socketPort"));
+export const server = io.listen(config.get("socketPort"));
 const topicsToSubscribe = [
   "test",
   "rwheel_encoder",
@@ -49,22 +49,18 @@ server.use(async (socket, next) => {
  * Initialize sockets for all gbs in database
  */
 export const initializeSockets = async (): Promise<any> => {
-  const gbs = await Gb.find({}).exec();
+  const gbs = await Gb.find({})
+    .exec()
+    .catch(err => {
+      throw new Error(err);
+    });
 
   gbs.forEach(gb => {
     updateDatabaseWithSocketInformation(gb);
     console.log(gb.username + " socket initialized");
     Gb.findByIdAndUpdate(gb.id, gb);
   });
-
-  return gbs;
 };
-
-initializeSockets().then((v: IGb[]) => {
-  v.forEach((a: IGb) => {
-    console.log(a.username + " socket initialized");
-  });
-});
 
 const updateDatabaseWithSocketInformation = (gb: any) => {
   server.of(`/${gb.username}`).on("connection", s => {
@@ -75,5 +71,3 @@ const updateDatabaseWithSocketInformation = (gb: any) => {
     });
   });
 };
-
-export { server };
