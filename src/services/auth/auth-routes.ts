@@ -17,5 +17,11 @@ export default [
     path: "/register",
     method: "post",
     handler: User.create
+  },
+  {
+    root,
+    path: "/sign-out",
+    method: "post",
+    handler: Auth.signOut
   }
 ];

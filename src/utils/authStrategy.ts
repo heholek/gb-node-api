@@ -59,6 +59,6 @@ export const genToken = (schema: any): object => {
 
   return {
     token,
-    user: schema._id
+    user: schema
   };
 };

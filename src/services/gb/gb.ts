@@ -69,6 +69,7 @@ class Gbs {
    */
   public getOne = async (req: Request, res: Response) => {
     try {
+      console.log(req.params.id);
       const user = await Gb.findById(req.params.id).exec();
 
       if (user === null) {
@@ -77,6 +78,7 @@ class Gbs {
 
       res.status(200).json(user);
     } catch (err) {
+      console.log(err);
       res.status(400).json(err);
     }
   };

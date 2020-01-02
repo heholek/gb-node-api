@@ -53,6 +53,10 @@ class Auth {
       res.status(401).json({ message: "Invalid credentials", errors: err });
     }
   };
+
+  public signOut = async (req: any, res: any) => {
+    res.send({ message: "ok" });
+  };
 }
 
 export default new Auth();

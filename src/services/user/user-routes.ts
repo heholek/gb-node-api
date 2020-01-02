@@ -28,7 +28,7 @@ export default [
   },
   {
     root,
-    path: "current",
+    path: "/current",
     method: "get",
     handler: User.getCurrent
   }

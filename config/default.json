@@ -6,6 +6,6 @@
     "port": 27017,
     "auth": false
   },
-  "socketPort": 8001,
+  "socketPort": 8000,
   "secret": "afeaf@213feafeaf"
 }

@@ -3,7 +3,7 @@ import { GbHelper } from "./TestHelper";
 const gbHelper = new GbHelper();
 
 describe("# Gb", () => {
-  it("should retrieve the user token and id", done => {
+  it("should retrieve the gb token and id", done => {
     gbHelper.initializeTestEnvironment().then(() => {
       gbHelper.login(gbHelper.testUser1, 200).then((res1: any) => {
         // tslint:disable-next-line:no-unused-expression

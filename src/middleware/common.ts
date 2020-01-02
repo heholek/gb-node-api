@@ -43,7 +43,11 @@ export const expressValidate = (router: Router) => {
  */
 export const checkAuth = (router: any) => {
   router.all("*", (req: any, res: any, next: any) => {
-    if (req.path.includes("login") || req.path.includes("register")) {
+    if (
+      req.path.includes("login") ||
+      req.path.includes("register") ||
+      req.path.includes("sign-out")
+    ) {
       return next();
     }
 
