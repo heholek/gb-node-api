@@ -1,6 +1,6 @@
 import config from "config";
 import io from "socket.io";
-import { model as Gb } from "../models/gb";
+import { IGb, model as Gb } from "../models/gb";
 
 export const server = io.listen(config.get("socketPort"));
 const topicsToSubscribe = [
@@ -21,6 +21,7 @@ const topicsToSubscribe = [
 /**
  * Server auth using username and password of Gb
  */
+// TODO ensure that gbs can only loginto their specific id
 server.use(async (socket, next) => {
   // Check if token is present
   if (
@@ -62,8 +63,8 @@ export const initializeSockets = async (): Promise<any> => {
   });
 };
 
-const updateDatabaseWithSocketInformation = (gb: any) => {
-  server.of(`/${gb.username}`).on("connection", s => {
+const updateDatabaseWithSocketInformation = (gb: IGb) => {
+  server.of(`/${gb._id}`).on("connection", s => {
     topicsToSubscribe.forEach(topic => {
       s.on(topic, message => {
         // console.log("Message published on " + topic + ": ", message);

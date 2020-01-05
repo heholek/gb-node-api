@@ -19,6 +19,7 @@ export interface IUser extends Document {
   settings: Settings;
   address: Address;
   updates: Update[];
+  ownedGbs: string[]; // string ids of owned gbs
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -39,6 +40,23 @@ export interface Settings {
   themeName: string;
 }
 
+const updateSchema: Schema = new Schema({
+  status: String,
+  title: String,
+  message: String,
+  read: Boolean
+});
+
+const addressSchema: Schema = new Schema({
+  street: String,
+  city: String,
+  zipCode: String
+});
+
+const settingSchema: Schema = new Schema({
+  themeName: String
+});
+
 /**
  * User Schema for use in Mongodb
  */
@@ -52,7 +70,13 @@ export const userSchema: Schema = new Schema(
     password: {
       type: String,
       required: true
-    }
+    },
+    name: String,
+    role: String,
+    settings: settingSchema,
+    address: addressSchema,
+    updates: [updateSchema],
+    ownedGbs: [String] // string ids of owned gbs
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
