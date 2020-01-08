@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import { model as Gb } from "../../models/gb";
 import { model as User } from "../../models/user";
 
@@ -10,10 +11,17 @@ class Users {
    */
   public getOwnedGbs = async (req: Request, res: Response) => {
     try {
-      const user = await User.findById(req.params.id).exec();
+      const user = await User.findById(req.body.id).exec();
       if (user) {
-        const userGbs = Gb.aggregate([{ $match: { _id: user.ownedGbs } }]);
-        res.status(200).json(userGbs);
+        // Map ids to object ids
+        const ids = user.ownedGbs.map(v => new mongoose.Types.ObjectId(v));
+        // Query database for array of ids
+        const records = await Gb.find()
+          .where("_id")
+          .in(ids)
+          .exec();
+        // Return
+        res.status(200).json(records);
       }
     } catch (err) {
       res.status(400).json(err);
