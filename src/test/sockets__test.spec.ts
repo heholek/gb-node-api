@@ -2,7 +2,6 @@ import { expect } from "chai";
 import config from "config";
 import io from "socket.io-client";
 import { model as Gb } from "../models/gb";
-import Gbs from "../services/gb/gb";
 import { initializeSockets, server } from "../utils/sockets";
 
 // Create GB and take ID

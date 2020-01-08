@@ -10,6 +10,12 @@ export default [
   },
   {
     root,
+    path: "/gbs",
+    method: "get",
+    handler: User.getOwnedGbs
+  },
+  {
+    root,
     path: "/:id",
     method: "get",
     handler: User.getOne

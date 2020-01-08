@@ -4,6 +4,7 @@ const jwt = require("jwt-simple");
 
 const secret = config.get("secret");
 
+// Take out "Bearer"
 const getAuthToken = (request: any) => {
   let token = null;
   if (request.headers.authorization) {
@@ -60,5 +61,19 @@ export const genToken = (schema: any): object => {
   return {
     token,
     user: schema
+  };
+};
+
+export const genTokenGb = (schema: any): object => {
+  const token = jwt.encode(
+    {
+      email: schema.username
+    },
+    secret
+  );
+
+  return {
+    token,
+    gb: schema
   };
 };

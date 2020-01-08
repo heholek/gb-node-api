@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import passport from "passport";
 import { model as Gb } from "../../models/gb";
-import { genToken, getStrategy } from "../../utils/authStrategy";
+import { genTokenGb, getStrategy } from "../../utils/authStrategy";
 import { initializeSockets } from "../../utils/sockets";
 
 class Gbs {
@@ -41,7 +41,7 @@ class Gbs {
         throw new Error("");
       }
 
-      res.status(200).json(genToken(gb), gb.id);
+      res.status(200).json(genTokenGb(gb), gb.id);
     } catch (err) {
       res.status(401).json({ message: "Invalid credentials", errors: err });
     }

@@ -1,7 +1,24 @@
 import { Request, Response } from "express";
+import { model as Gb } from "../../models/gb";
 import { model as User } from "../../models/user";
 
 class Users {
+  /**
+   * Get all of the users gbs
+   * @param req - req.params.id is the user id
+   * @param res
+   */
+  public getOwnedGbs = async (req: Request, res: Response) => {
+    try {
+      const user = await User.findById(req.params.id).exec();
+      if (user) {
+        const userGbs = Gb.aggregate([{ $match: { _id: user.ownedGbs } }]);
+        res.status(200).json(userGbs);
+      }
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  };
   /**
    * Get all the users in an array
    * @param req
