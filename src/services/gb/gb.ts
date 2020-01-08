@@ -54,8 +54,8 @@ class Gbs {
    */
   public getAll = async (req: Request, res: Response) => {
     try {
-      const users = await Gb.find({}).exec();
-      res.status(200).json(users);
+      const gbs = await Gb.find({}).exec();
+      res.status(200).json(gbs);
     } catch (err) {
       /* istanbul ignore next */
       res.status(400).json(err);

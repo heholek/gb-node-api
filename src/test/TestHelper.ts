@@ -115,9 +115,9 @@ export class GbHelper extends TestHelper {
       .send(parameters)
       .expect(expectedResponse)
       .then(v => {
-        if (v.body.user) {
+        if (v.body.gb) {
           this._gbAuthToken = v.body.token;
-          this._gbId = v.body.user._id;
+          this._gbId = v.body.gb._id;
         }
       });
   }
