@@ -12,6 +12,9 @@ class Users {
   public getOwnedGbs = async (req: Request, res: Response) => {
     try {
       const user = await User.findById(req.body.id).exec();
+      if (user === null) {
+        return res.status(404).json({ message: "This user doesn't exist" });
+      }
       if (user) {
         // Map ids to object ids
         const ids = user.ownedGbs.map(v => new mongoose.Types.ObjectId(v));
@@ -24,6 +27,7 @@ class Users {
         res.status(200).json(records);
       }
     } catch (err) {
+      console.log(err);
       res.status(400).json(err);
     }
   };
@@ -50,25 +54,6 @@ class Users {
   public getOne = async (req: Request, res: Response) => {
     try {
       const user = await User.findById(req.params.id).exec();
-
-      if (user === null) {
-        return res.status(404).json({ message: "This user doesn't exist" });
-      }
-
-      res.status(200).json(user);
-    } catch (err) {
-      res.status(400).json(err);
-    }
-  };
-
-  public getCurrent = async (req: Request, res: Response) => {
-    try {
-      let user;
-      // @ts-ignore
-      if (req?.user?.id) {
-        // @ts-ignore
-        user = await User.findById(req.user.id).exec();
-      }
 
       if (user === null) {
         return res.status(404).json({ message: "This user doesn't exist" });
@@ -162,10 +147,6 @@ class Users {
       if (errors) {
         throw errors;
       }
-    }
-
-    if (Object.keys(req.body).length === 0) {
-      throw new Error("Nothing was sent");
     }
   };
 }

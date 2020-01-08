@@ -1,8 +1,9 @@
+import { model as Gb } from "../models/gb";
 import { request } from "./common.spec";
 import { TestHelper } from "./TestHelper";
 const testHelper = new TestHelper();
 
-describe("# Auth", () => {
+describe("# User", () => {
   it("should retrieve the token and id", done => {
     testHelper.initializeTestEnvironment().then(() => {
       testHelper.login(testHelper.testUser1, 200).then((res1: any) => {
@@ -104,5 +105,47 @@ describe("# Auth", () => {
           .send({ email: "test1", password: "test1" })
           .expect(200);
       });
+  });
+
+  it("should get all the users", () => {
+    return request
+      .get("/user")
+      .set("Authorization", testHelper.authToken1)
+      .expect(200);
+  });
+
+  it("should return a list of users gbs (none)", () => {
+    return request
+      .get("/user/gbs")
+      .set("Authorization", testHelper.authToken1)
+      .send({ id: testHelper.userId1 })
+      .expect(200);
+  });
+
+  it("should get a users owned gbs", async () => {
+    let gbId = "";
+    const Data = new Gb({ username: "t", password: "t" });
+    await Data.save().then(v => {
+      gbId = v._id;
+    });
+    await request
+      .put(`/user/${testHelper.userId1}`)
+      .set("Authorization", testHelper.authToken1)
+      .send({ email: "test1", password: "test1", ownedGbs: [gbId] });
+    return request
+      .get("/user/gbs")
+      .set("Authorization", testHelper.authToken1)
+      .send({ id: testHelper.userId1 })
+      .expect(200)
+      .then(res => {
+        res.body[0].username.should.equal("t");
+      });
+  });
+
+  it("should delete a user", () => {
+    return request
+      .delete(`/user/${testHelper.userId1}`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(200);
   });
 });
