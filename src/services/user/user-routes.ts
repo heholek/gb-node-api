@@ -10,7 +10,7 @@ export default [
   },
   {
     root,
-    path: "/gbs",
+    path: "/gbs/:id",
     method: "get",
     handler: User.getOwnedGbs
   },

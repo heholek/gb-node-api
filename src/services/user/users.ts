@@ -11,7 +11,7 @@ class Users {
    */
   public getOwnedGbs = async (req: Request, res: Response) => {
     try {
-      const user = await User.findById(req.body.id).exec();
+      const user = await User.findById(req.params.id).exec();
       if (user === null) {
         return res.status(404).json({ message: "This user doesn't exist" });
       }

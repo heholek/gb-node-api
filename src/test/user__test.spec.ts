@@ -116,9 +116,8 @@ describe("# User", () => {
 
   it("should return a list of users gbs (none)", () => {
     return request
-      .get("/user/gbs")
+      .get(`/user/gbs/${testHelper.userId1}`)
       .set("Authorization", testHelper.authToken1)
-      .send({ id: testHelper.userId1 })
       .expect(200);
   });
 
@@ -133,9 +132,8 @@ describe("# User", () => {
       .set("Authorization", testHelper.authToken1)
       .send({ email: "test1", password: "test1", ownedGbs: [gbId] });
     return request
-      .get("/user/gbs")
+      .get(`/user/gbs/${testHelper.userId1}`)
       .set("Authorization", testHelper.authToken1)
-      .send({ id: testHelper.userId1 })
       .expect(200)
       .then(res => {
         res.body[0].username.should.equal("t");
