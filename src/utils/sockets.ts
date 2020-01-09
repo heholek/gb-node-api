@@ -1,6 +1,8 @@
 import config from "config";
+import { throwError } from "rxjs";
 import io from "socket.io";
 import { IGb, model as Gb } from "../models/gb";
+import { model as User } from "../models/user";
 
 export const server = io.listen(config.get("socketPort"));
 const topicsToSubscribe = [
@@ -26,21 +28,50 @@ server.use(async (socket, next) => {
   // Check if token is present
   if (
     socket.handshake.query &&
+    socket.handshake.query.role &&
     socket.handshake.query.password &&
     socket.handshake.query.username
   ) {
-    const gb = await Gb.findOne({
-      email: socket.handshake.query.username
-    });
-    if (gb === null) {
-      next(new Error("User not found"));
-    } else {
-      const success = await gb.comparePassword(socket.handshake.query.password);
-      if (!success) {
-        next(new Error("Wrong password"));
+    if (socket.handshake.query.role === "gb") {
+      try {
+        const gb = await Gb.findOne({
+          username: socket.handshake.query.username
+        });
+        if (gb !== null) {
+          const success = await gb.comparePassword(
+            socket.handshake.query.password
+          );
+          if (!success) {
+            next(new Error("Wrong password"));
+          }
+          next();
+        } else {
+          next(new Error("Gb not found"));
+        }
+      } catch (e) {
+        next(e);
       }
     }
-    next();
+    if (socket.handshake.query.roll === "user") {
+      try {
+        const user = await User.findOne({
+          username: socket.handshake.query.username
+        });
+        if (user !== null) {
+          const success = await user.comparePassword(
+            socket.handshake.query.password
+          );
+          if (!success) {
+            next(new Error("Wrong password"));
+          }
+          next();
+        } else {
+          next(new Error("User not found"));
+        }
+      } catch (e) {
+        next(e);
+      }
+    }
   } else {
     next(new Error("Authentication Error"));
   }

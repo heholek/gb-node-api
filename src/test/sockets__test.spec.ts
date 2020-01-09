@@ -38,7 +38,7 @@ describe("# Socket", () => {
     const socket = io.connect(
       `http://localhost:${config.get("socketPort")}/${id}`,
       {
-        query: { username: "gb2", password: "gb" }
+        query: { role: "gb", username: "gb2", password: "gb" }
       }
     );
     // tslint:disable-next-line:no-unused-expression
@@ -52,7 +52,7 @@ describe("# Socket", () => {
   it("should get messages from a socket to namespace gb1 on topic test", done => {
     const socket = io
       .connect(`http://localhost:${config.get("socketPort")}/${id}`, {
-        query: { username: "gb2", password: "gb" }
+        query: { role: "gb", username: "gb2", password: "gb" }
       })
       .emit("test", "test");
 
