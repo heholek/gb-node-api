@@ -50,9 +50,6 @@ export const checkAuth = (router: any) => {
     ) {
       return next();
     }
-
-    // console.log("headers loggin in", req.headers.authorization);
-
     return auth.authenticate((err: Error, user: IUser, info: any) => {
       if (err) {
         return next(err);

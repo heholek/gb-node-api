@@ -1,5 +1,4 @@
 import config from "config";
-import { throwError } from "rxjs";
 import io from "socket.io";
 import { IGb, model as Gb } from "../models/gb";
 import { model as User } from "../models/user";
@@ -55,7 +54,7 @@ server.use(async (socket, next) => {
     if (socket.handshake.query.roll === "user") {
       try {
         const user = await User.findOne({
-          username: socket.handshake.query.username
+          email: socket.handshake.query.email
         });
         if (user !== null) {
           const success = await user.comparePassword(
@@ -89,17 +88,23 @@ export const initializeSockets = async (): Promise<any> => {
 
   gbs.forEach(gb => {
     updateDatabaseWithSocketInformation(gb);
-    console.log(gb.username + " socket initialized");
+    console.log(gb._id + " socket initialized");
     Gb.findByIdAndUpdate(gb.id, gb);
   });
 };
 
 const updateDatabaseWithSocketInformation = (gb: IGb) => {
-  server.of(`/${gb._id}`).on("connection", s => {
-    topicsToSubscribe.forEach(topic => {
-      s.on(topic, message => {
-        // console.log("Message published on " + topic + ": ", message);
+  const nsp = server
+    .of(`/${gb._id}`)
+    .on("connection", s => {
+      topicsToSubscribe.forEach(topic => {
+        s.on(topic, message => {
+          nsp.emit(topic, message);
+          console.log("Message published on " + topic + ": ", message);
+        });
       });
+    })
+    .on("error", (e: any) => {
+      console.log(e);
     });
-  });
 };
