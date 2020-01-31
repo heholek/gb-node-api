@@ -14,6 +14,7 @@ import {
 export interface IGb extends Document {
   username: string; // Name of Gb
   password: string; // Password of Gb
+  color: string; // color of gb on map (red, blue, etc.)
   statusCode: number; // Last known status of Gb
   location: string; // Current location
   createdAt: string; // When Created
