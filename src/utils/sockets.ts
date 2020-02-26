@@ -21,7 +21,8 @@ const topicsToSubscribe = [
   "speed",
   "angle",
   "number_of_satellites",
-  "action"
+  "action",
+  "camera"
 ];
 
 /**
@@ -51,7 +52,21 @@ server.use(async (socket, next) => {
           if (!success) {
             next(new Error("Wrong password"));
           }
-          next();
+          // TODO FIX THIS IS TERRIBLE PRACTICE :(
+          gb.password = "gb";
+
+          gb.ip = socket.handshake.query.ipAddress;
+          // Update the gb in db with ip
+          await Gb.findOneAndUpdate({ _id: gb._id }, gb, (err, doc) => {
+            if (err) {
+              throw err;
+            } else {
+              next();
+            }
+          });
+          // await Gb.findByIdAndUpdate(gb._id, {ip: socket.handshake.query.ip}).catch(e => {
+          //   console.log(e);
+          // })
         } else {
           next(new Error("Gb not found"));
         }
@@ -109,8 +124,10 @@ const registerSocketsForGb = (gb: IGb) => {
   // Create a new namespace server for the id
   const nsp = server.of(`/${gb._id}`).on("connection", s => {
     // Once a new user is connected, listen for each topic i.e. /sesnor/front
+    // console.log(s);
     topicsToSubscribe.forEach(topic => {
       s.on(topic, message => {
+        // console.log(topic);
         // On recieivng a message, emit globally for all users
         nsp.emit(topic, message);
         // ----FOR DEBUG-----

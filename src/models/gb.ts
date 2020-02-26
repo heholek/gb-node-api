@@ -21,6 +21,7 @@ export interface IGb extends Document {
   updatedAt: string; // When updated
   version: string; // Software version of Gb
   videoLink: string; // Link to rtsp video stream
+  ip: string; // Ip of the garbage byte
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -39,7 +40,8 @@ export const gbSchema: Schema = new Schema<any>(
     statusCode: Number,
     location: String,
     version: String,
-    videoLink: String
+    videoLink: String,
+    ip: String
   },
   { timestamps: true }
 );
