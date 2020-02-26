@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import passport from "passport";
 import { model as Gb } from "../../models/gb";
-import { genToken, getStrategy } from "../../utils/authStrategy";
+import { genTokenGb, getStrategy } from "../../utils/authStrategy";
 import { initializeSockets } from "../../utils/sockets";
 
 class Gbs {
@@ -41,7 +41,7 @@ class Gbs {
         throw new Error("");
       }
 
-      res.status(200).json(genToken(gb), gb.id);
+      res.status(200).json(genTokenGb(gb), gb.id);
     } catch (err) {
       res.status(401).json({ message: "Invalid credentials", errors: err });
     }
@@ -54,8 +54,8 @@ class Gbs {
    */
   public getAll = async (req: Request, res: Response) => {
     try {
-      const users = await Gb.find({}).exec();
-      res.status(200).json(users);
+      const gbs = await Gb.find({}).exec();
+      res.status(200).json(gbs);
     } catch (err) {
       /* istanbul ignore next */
       res.status(400).json(err);
@@ -76,7 +76,9 @@ class Gbs {
       }
 
       res.status(200).json(user);
+      /* istanbul ignore next */
     } catch (err) {
+      /* istanbul ignore next */
       res.status(400).json(err);
     }
   };
@@ -98,9 +100,11 @@ class Gbs {
             .json({ message: "Name saved successfully!", id: value._id });
         })
         .catch((err: any) => {
+          // console.log(err);
           if (err.code === 11000) {
             res.status(400).json({ message: `Error: Name Taken`, errors: err });
           } else {
+            /* istanbul ignore next */
             res
               .status(400)
               .json({ message: `Error: ${err.errmsg}`, errors: err });
@@ -158,6 +162,7 @@ class Gbs {
    * @param update
    */
   private validateRequest = (req: any, update = false) => {
+    /* istanbul ignore next */
     if (!update) {
       req.checkBody("username", "The name cannot be empty").notEmpty();
       req.checkBody("password", "The password cannot be empty").notEmpty();
@@ -167,8 +172,9 @@ class Gbs {
         throw errors;
       }
     }
-
+    /* istanbul ignore next */
     if (Object.keys(req.body).length === 0) {
+      /* istanbul ignore next */
       throw new Error("Nothing was sent");
     }
   };

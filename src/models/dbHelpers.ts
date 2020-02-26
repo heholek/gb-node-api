@@ -48,6 +48,7 @@ export const comparePassword = (schema: Schema) => {
     return new Promise((resolve, reject) => {
       bcrypt.compare(candidatePassword, password, (err, success) => {
         if (err) {
+          /* istanbul ignore next */
           return reject(err);
         }
         return resolve(success);

@@ -1,7 +1,35 @@
 import { Request, Response } from "express";
+import mongoose from "mongoose";
+import { model as Gb } from "../../models/gb";
 import { model as User } from "../../models/user";
 
 class Users {
+  /**
+   * Get all of the users gbs
+   * @param req - req.params.id is the user id
+   * @param res
+   */
+  public getOwnedGbs = async (req: Request, res: Response) => {
+    try {
+      const user = await User.findById(req.params.id).exec();
+      if (user === null) {
+        return res.status(404).json({ message: "This user doesn't exist" });
+      }
+      if (user) {
+        // Map ids to object ids
+        const ids = user.ownedGbs.map(v => new mongoose.Types.ObjectId(v));
+        // Query database for array of ids
+        const records = await Gb.find()
+          .where("_id")
+          .in(ids)
+          .exec();
+        // Return
+        res.status(200).json(records);
+      }
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  };
   /**
    * Get all the users in an array
    * @param req
@@ -30,6 +58,7 @@ class Users {
         return res.status(404).json({ message: "This user doesn't exist" });
       }
 
+      console.log(user);
       res.status(200).json(user);
     } catch (err) {
       res.status(400).json(err);
@@ -56,8 +85,9 @@ class Users {
           if (err.code === 11000) {
             res
               .status(400)
-              .json({ message: `Error: Username Taken`, errors: err });
+              .json({ message: `Error: Email Taken`, errors: err });
           } else {
+            /* istanbul ignore next */
             res
               .status(400)
               .json({ message: `Error: ${err.errmsg}`, errors: err });
@@ -78,6 +108,7 @@ class Users {
       this.validateRequest(req, true);
       await User.findByIdAndUpdate(req.params.id, req.body)
         .catch(err => {
+          /* istanbul ignore next */
           res
             .status(400)
             .json({ message: "Error: Username Taken", errors: err });
@@ -86,6 +117,7 @@ class Users {
           res.status(200).json({ message: "User updated successfully!" });
         });
     } catch (err) {
+      /* istanbul ignore next */
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
   };
@@ -100,6 +132,7 @@ class Users {
       await User.findByIdAndRemove(req.params.id);
       res.status(200).json({ message: "User deleted successfully!" });
     } catch (err) {
+      /* istanbul ignore next */
       res.status(400).json({ message: `Error delete user: ${err}` });
     }
   };
@@ -111,17 +144,13 @@ class Users {
    */
   private validateRequest = (req: any, update = false) => {
     if (!update) {
-      req.checkBody("username", "The username cannot be empty").notEmpty();
+      req.checkBody("email", "The email cannot be empty").notEmpty();
       req.checkBody("password", "The password cannot be empty").notEmpty();
 
       const errors = req.validationErrors();
       if (errors) {
         throw errors;
       }
-    }
-
-    if (Object.keys(req.body).length === 0) {
-      throw new Error("Nothing was sent");
     }
   };
 }

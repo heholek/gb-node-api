@@ -24,8 +24,8 @@ All methods are documented using jsdoc tags. Tests are written in the test folde
 ### Authentication
 
 - Auth is provided through the /auth routes
-- Register at /auth/register with a "username" and "password" key. Your user ID will be returned if successful
-- Login at /auth/login with a "username" and "password" key. Your user ID and a token will be returned
+- Register at /auth/register with a "email" and "password" key. Your user ID will be returned if successful
+- Login at /auth/login with a "email" and "password" key. Your user ID and a token will be returned
 - To access protected routes, put the returned token inside of the header as the `Authorization` key
 - All routes but login and register are protected
 

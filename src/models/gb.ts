@@ -14,12 +14,14 @@ import {
 export interface IGb extends Document {
   username: string; // Name of Gb
   password: string; // Password of Gb
+  color: string; // color of gb on map (red, blue, etc.)
   statusCode: number; // Last known status of Gb
   location: string; // Current location
   createdAt: string; // When Created
   updatedAt: string; // When updated
   version: string; // Software version of Gb
   videoLink: string; // Link to rtsp video stream
+  ip: string; // Ip of the garbage byte
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -38,7 +40,8 @@ export const gbSchema: Schema = new Schema<any>(
     statusCode: Number,
     location: String,
     version: String,
-    videoLink: String
+    videoLink: String,
+    ip: String
   },
   { timestamps: true }
 );

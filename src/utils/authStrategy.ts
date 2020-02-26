@@ -4,12 +4,21 @@ const jwt = require("jwt-simple");
 
 const secret = config.get("secret");
 
+// Take out "Bearer"
+const getAuthToken = (request: any) => {
+  let token = null;
+  if (request.headers.authorization) {
+    token = request.headers.authorization.slice(7);
+  }
+  return token;
+};
+
 export const getStrategy = (db: any, mode: number): Strategy => {
   let params: object;
   if (mode === 1) {
     params = {
       secretOrKey: secret,
-      jwtFromRequest: ExtractJwt.fromAuthHeader(),
+      jwtFromRequest: getAuthToken,
       passReqToCallback: true
     };
   } else {
@@ -35,7 +44,7 @@ export const getStrategy = (db: any, mode: number): Strategy => {
           });
         }
 
-        return done(null, { _id: user._id, username: user.username });
+        return done(null, { _id: user._id, email: user.username });
       });
     }
   );
@@ -44,13 +53,27 @@ export const getStrategy = (db: any, mode: number): Strategy => {
 export const genToken = (schema: any): object => {
   const token = jwt.encode(
     {
-      username: schema.username
+      email: schema.username
     },
     secret
   );
 
   return {
-    token: "JWT " + token,
-    user: schema._id
+    token,
+    user: schema
+  };
+};
+
+export const genTokenGb = (schema: any): object => {
+  const token = jwt.encode(
+    {
+      email: schema.username
+    },
+    secret
+  );
+
+  return {
+    token,
+    gb: schema
   };
 };

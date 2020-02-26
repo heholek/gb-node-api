@@ -1,8 +1,9 @@
+import { model as Gb } from "../models/gb";
 import { request } from "./common.spec";
 import { TestHelper } from "./TestHelper";
 const testHelper = new TestHelper();
 
-describe("# Auth", () => {
+describe("# User", () => {
   it("should retrieve the token and id", done => {
     testHelper.initializeTestEnvironment().then(() => {
       testHelper.login(testHelper.testUser1, 200).then((res1: any) => {
@@ -11,7 +12,7 @@ describe("# Auth", () => {
         // tslint:disable-next-line:no-unused-expression
         res1.body.user.should.not.be.empty;
         testHelper.authToken1 = res1.body.token;
-        testHelper.userId1 = res1.body.user;
+        testHelper.userId1 = res1.body.user._id;
         done();
       });
     });
@@ -19,17 +20,17 @@ describe("# Auth", () => {
 
   it("should not login with the right user but wrong password", () => {
     return testHelper.login(
-      { username: testHelper.testUser1.username, password: "wrongpassword" },
+      { email: testHelper.testUser1.email, password: "wrongpassword" },
       401
     );
   });
 
-  it("should return invalid credentials error if no password or a nonexistant username is sent", () => {
+  it("should return invalid credentials error if no password or a nonexistant email is sent", () => {
     return testHelper
-      .login({ username: testHelper.testUser1.username, password: "" }, 401)
+      .login({ email: testHelper.testUser1.email, password: "" }, 401)
       .then(res => {
         return testHelper.login(
-          { username: "anotherusername", password: "fakepass" },
+          { email: "anotheremail", password: "fakepass" },
           401
         );
       });
@@ -37,14 +38,14 @@ describe("# Auth", () => {
 
   it("should create user", () => {
     return testHelper.register(
-      { username: "test " + Date.now().toString(), password: "test" },
+      { email: "test " + Date.now().toString(), password: "test" },
       201
     );
   });
 
   it("should not create user without password", () => {
     return testHelper.register(
-      { username: "test " + Date.now().toString(), password: "" },
+      { email: "test " + Date.now().toString(), password: "" },
       400
     );
   });
@@ -85,10 +86,10 @@ describe("# Auth", () => {
       .expect(200);
   });
 
-  it("should not allow two users with the same username", () => {
+  it("should not allow two users with the same email", () => {
     return testHelper.register(testHelper.testUser1, 400).then((res: any) => {
       // tslint:disable-next-line:no-unused-expression
-      res.body.message.should.equal("Error: Username Taken");
+      res.body.message.should.equal("Error: Email Taken");
     });
   });
 
@@ -96,13 +97,67 @@ describe("# Auth", () => {
     return request
       .put(`/user/${testHelper.userId1}`)
       .set("Authorization", testHelper.authToken1)
-      .send({ username: "test1", password: "test1" })
+      .send({ email: "test1", password: "test1" })
       .expect(200)
       .then((res: any) => {
         return request
           .post(testHelper.loginRoute)
-          .send({ username: "test1", password: "test1" })
+          .send({ email: "test1", password: "test1" })
           .expect(200);
       });
+  });
+
+  it("should get all the users", () => {
+    return request
+      .get("/user")
+      .set("Authorization", testHelper.authToken1)
+      .expect(200);
+  });
+
+  it("should return a list of users gbs (none)", () => {
+    return request
+      .get(`/user/gbs/${testHelper.userId1}`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(200);
+  });
+
+  it("shouse return an error since user doesn't exist", () => {
+    return request
+      .get(`/user/gbs/${testHelper.userId1.slice(0, -1)}a`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(404);
+  });
+
+  it("shouse return an error since id is malformed", () => {
+    return request
+      .get(`/user/gbs/${testHelper.userId1}a`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(400);
+  });
+
+  it("should get a users owned gbs", async () => {
+    let gbId = "";
+    const Data = new Gb({ username: "t", password: "t" });
+    await Data.save().then(v => {
+      gbId = v._id;
+    });
+    await request
+      .put(`/user/${testHelper.userId1}`)
+      .set("Authorization", testHelper.authToken1)
+      .send({ email: "test1", password: "test1", ownedGbs: [gbId] });
+    return request
+      .get(`/user/gbs/${testHelper.userId1}`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(200)
+      .then(res => {
+        res.body[0].username.should.equal("t");
+      });
+  });
+
+  it("should delete a user", () => {
+    return request
+      .delete(`/user/${testHelper.userId1}`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(200);
   });
 });

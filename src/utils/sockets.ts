@@ -1,7 +1,13 @@
+import config from "config";
 import io from "socket.io";
 import { IGb, model as Gb } from "../models/gb";
+import { model as User } from "../models/user";
 
-const server = io.listen(8000);
+// Create a new socket server
+export const server = io.listen(config.get("socketPort"));
+
+// TODO update with topics subscibed from GB
+// Addresses that are listend to in Socket.io for Gb data
 const topicsToSubscribe = [
   "test",
   "rwheel_encoder",
@@ -14,31 +20,81 @@ const topicsToSubscribe = [
   "position",
   "speed",
   "angle",
-  "number_of_satellites"
+  "number_of_satellites",
+  "action",
+  "camera"
 ];
 
 /**
  * Server auth using username and password of Gb
  */
+// TODO ensure that gbs can only loginto their specific id
 server.use(async (socket, next) => {
-  // Check if token is present
+  // Check if token is present in the query
   if (
     socket.handshake.query &&
+    socket.handshake.query.role &&
     socket.handshake.query.password &&
     socket.handshake.query.username
   ) {
-    const gb = await Gb.findOne({
-      username: socket.handshake.query.username
-    });
-    if (gb === null) {
-      next(new Error("User not found"));
-    } else {
-      const success = await gb.comparePassword(socket.handshake.query.password);
-      if (!success) {
-        next(new Error("Wrong password"));
+    // Check for the role type
+    if (socket.handshake.query.role === "gb") {
+      // Login as Gb
+      // TODO probably repeat code, DRYify
+      try {
+        const gb = await Gb.findOne({
+          username: socket.handshake.query.username
+        });
+        if (gb !== null) {
+          const success = await gb.comparePassword(
+            socket.handshake.query.password
+          );
+          if (!success) {
+            next(new Error("Wrong password"));
+          }
+          // TODO FIX THIS IS TERRIBLE PRACTICE :(
+          gb.password = "gb";
+
+          gb.ip = socket.handshake.query.ipAddress;
+          // Update the gb in db with ip
+          await Gb.findOneAndUpdate({ _id: gb._id }, gb, (err, doc) => {
+            if (err) {
+              throw err;
+            } else {
+              next();
+            }
+          });
+          // await Gb.findByIdAndUpdate(gb._id, {ip: socket.handshake.query.ip}).catch(e => {
+          //   console.log(e);
+          // })
+        } else {
+          next(new Error("Gb not found"));
+        }
+      } catch (e) {
+        next(e);
       }
     }
-    next();
+    if (socket.handshake.query.roll === "user") {
+      // TODO same thing as up there
+      try {
+        const user = await User.findOne({
+          email: socket.handshake.query.email
+        });
+        if (user !== null) {
+          const success = await user.comparePassword(
+            socket.handshake.query.password
+          );
+          if (!success) {
+            next(new Error("Wrong password"));
+          }
+          next();
+        } else {
+          next(new Error("User not found"));
+        }
+      } catch (e) {
+        next(e);
+      }
+    }
   } else {
     next(new Error("Authentication Error"));
   }
@@ -48,31 +104,39 @@ server.use(async (socket, next) => {
  * Initialize sockets for all gbs in database
  */
 export const initializeSockets = async (): Promise<any> => {
-  const gbs = await Gb.find({}).exec();
+  // Get all the gbs from the databse
+  const gbs = await Gb.find({})
+    .exec()
+    .catch(err => {
+      /* istanbul ignore next */
+      throw new Error(err);
+    });
 
+  // For each Gb, register the socke
   gbs.forEach(gb => {
-    updateDatabaseWithSocketInformation(gb);
-    console.log(gb.username + " socket initialized");
+    registerSocketsForGb(gb);
+    console.log(gb._id + " socket initialized");
     Gb.findByIdAndUpdate(gb.id, gb);
   });
-
-  return gbs;
 };
 
-initializeSockets().then((v: IGb[]) => {
-  v.forEach((a: IGb) => {
-    console.log(a.username + " socket initialized");
-  });
-});
-
-const updateDatabaseWithSocketInformation = (gb: any) => {
-  server.of(`/${gb.username}`).on("connection", s => {
+const registerSocketsForGb = (gb: IGb) => {
+  // Create a new namespace server for the id
+  const nsp = server.of(`/${gb._id}`).on("connection", s => {
+    // Once a new user is connected, listen for each topic i.e. /sesnor/front
+    // console.log(s);
     topicsToSubscribe.forEach(topic => {
       s.on(topic, message => {
+        // console.log(topic);
+        // On recieivng a message, emit globally for all users
+        nsp.emit(topic, message);
+        // ----FOR DEBUG-----
         // console.log("Message published on " + topic + ": ", message);
       });
     });
   });
+  // /* istanbul ignore next */
+  // .on("error", (e: any) => {
+  //   console.log(e);
+  // });
 };
-
-export { server };

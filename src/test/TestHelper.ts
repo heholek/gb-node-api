@@ -3,18 +3,18 @@ import { cleanCollectionOfTestUsers } from "../models/user";
 import { request } from "./common.spec";
 
 export class TestHelper {
-  private _testUser1 = { username: "test1", password: "test1" };
-  private _testUser2 = { username: "test2", password: "test2" };
+  private _testUser1 = { email: "test1", password: "test1" };
+  private _testUser2 = { email: "test2", password: "test2" };
   private _loginRoute = "/auth/login";
   private _registerRoute = "/auth/register";
   private _authToken1: string = "";
   private _userId1: string = "";
 
-  get testUser1(): { password: string; username: string } {
+  get testUser1(): { password: string; email: string } {
     return this._testUser1;
   }
 
-  get testUser2(): { password: string; username: string } {
+  get testUser2(): { password: string; email: string } {
     return this._testUser2;
   }
 
@@ -23,7 +23,7 @@ export class TestHelper {
   }
 
   get authToken1(): string {
-    return this._authToken1;
+    return "Bearer " + this._authToken1;
   }
   set authToken1(value: string) {
     this._authToken1 = value;
@@ -43,7 +43,7 @@ export class TestHelper {
   }
 
   public async login(
-    parameters: LoginInformation,
+    parameters: UserLoginInformation,
     expectedResponse: number
   ): Promise<any> {
     return request
@@ -53,7 +53,7 @@ export class TestHelper {
   }
 
   public async register(
-    parameters: LoginInformation,
+    parameters: UserLoginInformation,
     expectedResponse: number
   ): Promise<any> {
     return request
@@ -63,7 +63,11 @@ export class TestHelper {
   }
 }
 
-interface LoginInformation {
+interface UserLoginInformation {
+  email: string;
+  password: string;
+}
+interface GbLoginInformation {
   username: string;
   password: string;
 }
@@ -102,7 +106,7 @@ export class GbHelper extends TestHelper {
   }
 
   public async loginGb(
-    parameters: LoginInformation,
+    parameters: GbLoginInformation,
     expectedResponse: number
   ): Promise<any> {
     return request
@@ -111,13 +115,15 @@ export class GbHelper extends TestHelper {
       .send(parameters)
       .expect(expectedResponse)
       .then(v => {
-        this._gbAuthToken = v.body.token;
-        this._gbId = v.body.user;
+        if (v.body.gb) {
+          this._gbAuthToken = v.body.token;
+          this._gbId = v.body.gb._id;
+        }
       });
   }
 
   public async registerGb(
-    parameters: LoginInformation,
+    parameters: GbLoginInformation,
     expectedResponse: number
   ): Promise<any> {
     return request

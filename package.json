@@ -13,7 +13,7 @@
     "test:dev": "tsc-watch --onSuccess \" mocha **/*.spec.js\"",
     "test:coverage": "tsc && nyc --reporter=lcov --reporter=text-summary mocha **/*.spec.js",
     "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "release": "release-it"
+    "release": "release-it && auto-changelog"
   },
   "repository": {
     "type": "git",
