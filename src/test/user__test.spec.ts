@@ -121,6 +121,20 @@ describe("# User", () => {
       .expect(200);
   });
 
+  it("shouse return an error since user doesn't exist", () => {
+    return request
+      .get(`/user/gbs/${testHelper.userId1.slice(0, -1)}a`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(404);
+  });
+
+  it("shouse return an error since id is malformed", () => {
+    return request
+      .get(`/user/gbs/${testHelper.userId1}a`)
+      .set("Authorization", testHelper.authToken1)
+      .expect(400);
+  });
+
   it("should get a users owned gbs", async () => {
     let gbId = "";
     const Data = new Gb({ username: "t", password: "t" });

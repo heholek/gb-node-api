@@ -27,7 +27,6 @@ class Users {
         res.status(200).json(records);
       }
     } catch (err) {
-      console.log(err);
       res.status(400).json(err);
     }
   };
@@ -59,6 +58,7 @@ class Users {
         return res.status(404).json({ message: "This user doesn't exist" });
       }
 
+      console.log(user);
       res.status(200).json(user);
     } catch (err) {
       res.status(400).json(err);
@@ -87,6 +87,7 @@ class Users {
               .status(400)
               .json({ message: `Error: Email Taken`, errors: err });
           } else {
+            /* istanbul ignore next */
             res
               .status(400)
               .json({ message: `Error: ${err.errmsg}`, errors: err });
@@ -107,6 +108,7 @@ class Users {
       this.validateRequest(req, true);
       await User.findByIdAndUpdate(req.params.id, req.body)
         .catch(err => {
+          /* istanbul ignore next */
           res
             .status(400)
             .json({ message: "Error: Username Taken", errors: err });
@@ -115,6 +117,7 @@ class Users {
           res.status(200).json({ message: "User updated successfully!" });
         });
     } catch (err) {
+      /* istanbul ignore next */
       res.status(400).json({ message: "Missing parameters", errors: err });
     }
   };
@@ -129,6 +132,7 @@ class Users {
       await User.findByIdAndRemove(req.params.id);
       res.status(200).json({ message: "User deleted successfully!" });
     } catch (err) {
+      /* istanbul ignore next */
       res.status(400).json({ message: `Error delete user: ${err}` });
     }
   };

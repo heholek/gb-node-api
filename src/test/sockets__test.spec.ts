@@ -23,7 +23,7 @@ describe("# Socket", () => {
     });
   });
 
-  it("should not allow users to connect without proper authorization", done => {
+  it("should not allow gbs to connect without proper authorization", done => {
     const socket = io.connect(
       `http://localhost:${config.get("socketPort")}/${id}`
     );
@@ -34,7 +34,35 @@ describe("# Socket", () => {
     });
   });
 
-  it("should let users connect that have the proper authorization", done => {
+  it("should not allow gbs to connect with wrong username", done => {
+    const socket = io.connect(
+      `http://localhost:${config.get("socketPort")}/${id}`,
+      {
+        query: { role: "gb", username: "gb", password: "gb" }
+      }
+    );
+    // tslint:disable-next-line:no-unused-expression
+    socket.on("error", (err: any) => {
+      expect(err).to.equal("Gb not found");
+      done();
+    });
+  });
+
+  it("should not allow gbs to connect with wrong password", done => {
+    const socket = io.connect(
+      `http://localhost:${config.get("socketPort")}/${id}`,
+      {
+        query: { role: "gb", username: "gb2", password: "tes" }
+      }
+    );
+    // tslint:disable-next-line:no-unused-expression
+    socket.on("error", (err: any) => {
+      expect(err).to.equal("Wrong password");
+      done();
+    });
+  });
+
+  it("should let gbs connect that have the proper authorization", done => {
     const socket = io.connect(
       `http://localhost:${config.get("socketPort")}/${id}`,
       {

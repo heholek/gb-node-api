@@ -93,6 +93,7 @@ export const initializeSockets = async (): Promise<any> => {
   const gbs = await Gb.find({})
     .exec()
     .catch(err => {
+      /* istanbul ignore next */
       throw new Error(err);
     });
 
@@ -106,20 +107,19 @@ export const initializeSockets = async (): Promise<any> => {
 
 const registerSocketsForGb = (gb: IGb) => {
   // Create a new namespace server for the id
-  const nsp = server
-    .of(`/${gb._id}`)
-    .on("connection", s => {
-      // Once a new user is connected, listen for each topic i.e. /sesnor/front
-      topicsToSubscribe.forEach(topic => {
-        s.on(topic, message => {
-          // On recieivng a message, emit globally for all users
-          nsp.emit(topic, message);
-          // ----FOR DEBUG-----
-          // console.log("Message published on " + topic + ": ", message);
-        });
+  const nsp = server.of(`/${gb._id}`).on("connection", s => {
+    // Once a new user is connected, listen for each topic i.e. /sesnor/front
+    topicsToSubscribe.forEach(topic => {
+      s.on(topic, message => {
+        // On recieivng a message, emit globally for all users
+        nsp.emit(topic, message);
+        // ----FOR DEBUG-----
+        // console.log("Message published on " + topic + ": ", message);
       });
-    })
-    .on("error", (e: any) => {
-      console.log(e);
     });
+  });
+  // /* istanbul ignore next */
+  // .on("error", (e: any) => {
+  //   console.log(e);
+  // });
 };

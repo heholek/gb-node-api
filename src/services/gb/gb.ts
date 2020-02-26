@@ -76,7 +76,9 @@ class Gbs {
       }
 
       res.status(200).json(user);
+      /* istanbul ignore next */
     } catch (err) {
+      /* istanbul ignore next */
       res.status(400).json(err);
     }
   };
@@ -102,6 +104,7 @@ class Gbs {
           if (err.code === 11000) {
             res.status(400).json({ message: `Error: Name Taken`, errors: err });
           } else {
+            /* istanbul ignore next */
             res
               .status(400)
               .json({ message: `Error: ${err.errmsg}`, errors: err });
@@ -159,6 +162,7 @@ class Gbs {
    * @param update
    */
   private validateRequest = (req: any, update = false) => {
+    /* istanbul ignore next */
     if (!update) {
       req.checkBody("username", "The name cannot be empty").notEmpty();
       req.checkBody("password", "The password cannot be empty").notEmpty();
@@ -168,8 +172,9 @@ class Gbs {
         throw errors;
       }
     }
-
+    /* istanbul ignore next */
     if (Object.keys(req.body).length === 0) {
+      /* istanbul ignore next */
       throw new Error("Nothing was sent");
     }
   };

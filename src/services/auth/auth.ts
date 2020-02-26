@@ -25,7 +25,7 @@ class Auth {
   /**
    * User login
    * @param req
-   * @param res
+   * @param res - returns { token, user } where token is JWT token, user is user object
    */
   public login = async (req: any, res: any) => {
     try {
@@ -55,6 +55,7 @@ class Auth {
   };
 
   public signOut = async (req: any, res: any) => {
+    /* istanbul ignore next */
     res.send({ message: "ok" });
   };
 }

@@ -56,6 +56,14 @@ describe("# Gb", () => {
       .expect(200);
   });
 
+  it("should not get a single gb with a wrong id", () => {
+    return request
+      .get(`/gb/${gbHelper.gbId.slice(0, -2)}3a`)
+      .set("Authorization", gbHelper.authToken1)
+      .send({ gb_auth: gbHelper.gbAuthToken })
+      .expect(404);
+  });
+
   it("should get all gb with a token", () => {
     return request
       .get("/gb")
