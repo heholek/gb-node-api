@@ -54,6 +54,7 @@ server.use(async (socket, next) => {
           }
           // TODO FIX THIS IS TERRIBLE PRACTICE :(
           gb.password = "gb";
+          console.log(socket.handshake.query);
 
           gb.ip = socket.handshake.query.ipAddress;
           // Update the gb in db with ip

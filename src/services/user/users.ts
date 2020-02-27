@@ -58,7 +58,6 @@ class Users {
         return res.status(404).json({ message: "This user doesn't exist" });
       }
 
-      console.log(user);
       res.status(200).json(user);
     } catch (err) {
       res.status(400).json(err);
