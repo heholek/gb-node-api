@@ -123,7 +123,7 @@ describe("# User", () => {
 
   it("shouse return an error since user doesn't exist", () => {
     return request
-      .get(`/user/gbs/${testHelper.userId1.slice(0, -1)}a`)
+      .get(`/user/gbs/${testHelper.userId1.slice(0, -4)}1fea`)
       .set("Authorization", testHelper.authToken1)
       .expect(404);
   });
