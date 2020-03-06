@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import gbHelper from "../../models/gb";
-import { model as User } from "../../models/user";
+import userHelper from "../../models/user";
 
 class Users {
   /**
@@ -11,7 +11,7 @@ class Users {
    */
   public getOwnedGbs = async (req: Request, res: Response) => {
     try {
-      const user = await User.findById(req.params.id).exec();
+      const user = await userHelper.findById(req.params.id);
       if (user === null) {
         return res.status(404).json({ message: "This user doesn't exist" });
       }
@@ -37,7 +37,7 @@ class Users {
    */
   public getAll = async (req: Request, res: Response) => {
     try {
-      const users = await User.find({}).exec();
+      const users = await userHelper.getAll();
       res.status(200).json(users);
     } catch (err) {
       /* istanbul ignore next */
@@ -52,7 +52,7 @@ class Users {
    */
   public getOne = async (req: Request, res: Response) => {
     try {
-      const user = await User.findById(req.params.id).exec();
+      const user = await userHelper.findById(req.params.id);
 
       if (user === null) {
         return res.status(404).json({ message: "This user doesn't exist" });
@@ -73,8 +73,8 @@ class Users {
   public create = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req);
-      const Data = new User(req.body);
-      Data.save()
+      userHelper
+        .createOne(req.body)
         .then(value => {
           res
             .status(201)
@@ -105,7 +105,8 @@ class Users {
   public update = async (req: Request, res: Response) => {
     try {
       this.validateRequest(req, true);
-      await User.findByIdAndUpdate(req.params.id, req.body)
+      await userHelper
+        .edit(req.params.id, req.body)
         .catch(err => {
           /* istanbul ignore next */
           res
@@ -128,7 +129,7 @@ class Users {
    */
   public delete = async (req: Request, res: Response) => {
     try {
-      await User.findByIdAndRemove(req.params.id);
+      await userHelper.delete(req.params.id);
       res.status(200).json({ message: "User deleted successfully!" });
     } catch (err) {
       /* istanbul ignore next */

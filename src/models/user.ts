@@ -2,6 +2,7 @@
  * User Model for Database
  */
 import mongoose, { Document, Schema } from "mongoose";
+import DbHelpers from "../db/DbHelpers";
 import {
   comparePassword,
   preSaveHashPassword,
@@ -89,4 +90,6 @@ export const model = mongoose.model<IUser>("User", userSchema);
 
 export const cleanCollectionOfTestUsers = () => model.deleteMany({}).exec();
 
-export default model;
+export const userHelper = new DbHelpers(model);
+
+export default userHelper;
