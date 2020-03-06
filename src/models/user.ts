@@ -6,7 +6,7 @@ import {
   comparePassword,
   preSaveHashPassword,
   preUpdateHashPassword
-} from "./dbHelpers";
+} from "./modelHelpers";
 
 /**
  * Creates interface for the user

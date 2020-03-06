@@ -41,8 +41,8 @@ applyMiddleware(errorHandlers, router);
 const port = Number(config.get("port")) | 3000;
 const server = http.createServer(router);
 
-initializeSockets().then(v => {
-  console.log("All Sockets Initialized");
+initializeSockets().catch(e => {
+  console.log("Error in socket initialization", e);
 });
 
 // Listen on port

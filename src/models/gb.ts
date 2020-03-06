@@ -2,11 +2,12 @@
  * Garbage Byte model in Database
  */
 import mongoose, { Document, Schema } from "mongoose";
+import DbHelpers from "../db/DbHelpers";
 import {
   comparePassword,
   preSaveHashPassword,
   preUpdateHashPassword
-} from "./dbHelpers";
+} from "./modelHelpers";
 
 /**
  * Interface for the garbage byte
@@ -53,8 +54,8 @@ comparePassword(gbSchema);
 
 export const model = mongoose.model<IGb>("gb", gbSchema);
 
-// @ts-ignore
 export const cleanCollectionOfTestGbs = () => model.deleteMany({}).exec(); // For testing
 
-// @ts-ignore
-export default model;
+export const gbHelper = new DbHelpers(model);
+
+export default gbHelper;

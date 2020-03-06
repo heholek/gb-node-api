@@ -42,19 +42,20 @@ server.use(async (socket, next) => {
       // Login as Gb
       // TODO probably repeat code, DRYify
       try {
-        const gb = await Gb.findOne({
+        const gb: IGb | null = await Gb.findOne({
           username: socket.handshake.query.username
         });
-        if (gb !== null) {
+
+        // Ensure the gb has the proper login and user is logging into the proper namespace
+        if (gb !== null && socket.server.nsps["/" + gb._id] !== undefined) {
           const success = await gb.comparePassword(
             socket.handshake.query.password
           );
           if (!success) {
             next(new Error("Wrong password"));
           }
-          // TODO FIX THIS IS TERRIBLE PRACTICE :(
-          gb.password = "gb";
-          console.log(socket.handshake.query);
+          // @ts-ignore
+          gb.password = socket.handshake.query.password;
 
           gb.ip = socket.handshake.query.ipAddress;
           // Update the gb in db with ip
@@ -69,7 +70,9 @@ server.use(async (socket, next) => {
           //   console.log(e);
           // })
         } else {
-          next(new Error("Gb not found"));
+          next(
+            new Error("Gb not found or not authorized to access this namespace")
+          );
         }
       } catch (e) {
         next(e);
@@ -116,7 +119,6 @@ export const initializeSockets = async (): Promise<any> => {
   // For each Gb, register the socke
   gbs.forEach(gb => {
     registerSocketsForGb(gb);
-    console.log(gb._id + " socket initialized");
     Gb.findByIdAndUpdate(gb.id, gb);
   });
 };
@@ -125,10 +127,8 @@ const registerSocketsForGb = (gb: IGb) => {
   // Create a new namespace server for the id
   const nsp = server.of(`/${gb._id}`).on("connection", s => {
     // Once a new user is connected, listen for each topic i.e. /sesnor/front
-    // console.log(s);
     topicsToSubscribe.forEach(topic => {
       s.on(topic, message => {
-        // console.log(topic);
         // On recieivng a message, emit globally for all users
         nsp.emit(topic, message);
         // ----FOR DEBUG-----
@@ -136,8 +136,4 @@ const registerSocketsForGb = (gb: IGb) => {
       });
     });
   });
-  // /* istanbul ignore next */
-  // .on("error", (e: any) => {
-  //   console.log(e);
-  // });
 };

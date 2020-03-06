@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import { model as Gb } from "../../models/gb";
+import gbHelper from "../../models/gb";
 import { model as User } from "../../models/user";
 
 class Users {
@@ -19,10 +19,10 @@ class Users {
         // Map ids to object ids
         const ids = user.ownedGbs.map(v => new mongoose.Types.ObjectId(v));
         // Query database for array of ids
-        const records = await Gb.find()
+        const records = await gbHelper.model
+          .find()
           .where("_id")
-          .in(ids)
-          .exec();
+          .in(ids);
         // Return
         res.status(200).json(records);
       }
