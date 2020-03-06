@@ -133,6 +133,7 @@ class Gbs {
       await gbHelper
         .edit(req.params.id, this.mapDtoToUser(req.body))
         .catch(err => {
+          console.log(err);
           message = "Error: Username Taken";
           throw new Error(err);
         })
@@ -210,12 +211,10 @@ class Gbs {
   private mapDtoToUser(dto: any) {
     return dto
       ? {
-          _id: dto._id,
           username: dto.username,
           color: dto.color, // color of dto on map (red, blue, etc.)
           statusCode: dto.statusCode, // Last known status of dto
           location: dto.location, // Current location
-          createdAt: dto.createdAt, // When Created
           updatedAt: dto.updatedAt, // When updated
           version: dto.version, // Software version of dto
           videoLink: dto.videoLink, // Link to rtsp video stream

@@ -43,7 +43,9 @@ describe("# Socket", () => {
     );
     // tslint:disable-next-line:no-unused-expression
     socket.on("error", (err: any) => {
-      expect(err).to.equal("Gb not found");
+      expect(err).to.equal(
+        "Gb not found or not authorized to access this namespace"
+      );
       done();
     });
   });
