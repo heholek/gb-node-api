@@ -17,7 +17,9 @@ class Users {
       }
       if (user) {
         // Map ids to object ids
-        const ids = user.ownedGbs.map(v => new mongoose.Types.ObjectId(v));
+        const ids = user.ownedGbs.map(
+          (v: any) => new mongoose.Types.ObjectId(v)
+        );
         // Query database for array of ids
         const records = await gbHelper.model
           .find()
